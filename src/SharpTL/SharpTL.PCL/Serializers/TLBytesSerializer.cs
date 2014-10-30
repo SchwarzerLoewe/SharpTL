@@ -12,6 +12,25 @@ namespace SharpTL.Serializers
     {
         private static readonly Type _SupportedType = typeof (byte[]);
 
+        private readonly bool _isDurovMode;
+
+        public TLBytesSerializer() : this(false)
+        {
+        }
+
+        public TLBytesSerializer(bool isDurovMode)
+        {
+            _isDurovMode = isDurovMode;
+        }
+
+        /// <summary>
+        ///     In Durov mode Bytes is an alias for String type hence both serializers have the same constructor numbers.
+        /// </summary>
+        public bool IsDurovMode
+        {
+            get { return _isDurovMode; }
+        }
+
         public override Type SupportedType
         {
             get { return _SupportedType; }
@@ -19,7 +38,9 @@ namespace SharpTL.Serializers
 
         public override uint ConstructorNumber
         {
-            get { return 0xB5286E24; }
+            // string#B5286E24 ? = String;
+            // bytes#EBEFB69E ? = Bytes;
+            get { return _isDurovMode ? 0xB5286E24 : 0xEBEFB69E; }
         }
 
         protected override object ReadBody(TLSerializationContext context)

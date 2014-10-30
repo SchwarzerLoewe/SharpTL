@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="BuiltIn.cs">
-//   Copyright (c) 2013 Alexander Logger. All rights reserved.
+//   Copyright (c) 2013-2013 Alexander Logger. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -13,12 +13,33 @@ namespace SharpTL.Serializers
     /// </summary>
     public static class BuiltIn
     {
-        private static readonly List<ITLSerializer> BaseTypeSerializersInternal;
+        private static List<ITLSerializer> _baseTypeSerializersInternal;
 
-        static BuiltIn()
+        /// <summary>
+        ///     Built-in base type serializers.
+        /// </summary>
+        public static IEnumerable<ITLSerializer> BaseTypeSerializers
         {
-            // Add base type serializers.
-            BaseTypeSerializersInternal = new List<ITLSerializer>
+            get
+            {
+                return _baseTypeSerializersInternal ?? (_baseTypeSerializersInternal = CreateSerializers(false));
+            }
+        }
+
+        /// <summary>
+        ///     Built-in base type serializers in Durov mode.
+        /// </summary>
+        public static IEnumerable<ITLSerializer> DurovBaseTypeSerializers
+        {
+            get
+            {
+                return _baseTypeSerializersInternal ?? (_baseTypeSerializersInternal = CreateSerializers(true));
+            }
+        }
+
+        private static List<ITLSerializer> CreateSerializers(bool isDurovMode)
+        {
+            return new List<ITLSerializer>
             {
                 new IntSerializer(),
                 new UIntSerializer(),
@@ -28,18 +49,10 @@ namespace SharpTL.Serializers
                 new StringSerializer(),
                 new BooleanSerializer(),
                 new TLVectorSerializer<object>(),
-                new TLBytesSerializer(),
+                new TLBytesSerializer(isDurovMode),
                 new Int128Serializer(),
                 new Int256Serializer()
             };
-        }
-
-        /// <summary>
-        ///     Built-in base type serializers.
-        /// </summary>
-        public static IEnumerable<ITLSerializer> BaseTypeSerializers
-        {
-            get { return BaseTypeSerializersInternal; }
         }
     }
 }

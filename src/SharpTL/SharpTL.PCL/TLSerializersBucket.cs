@@ -18,6 +18,7 @@ namespace SharpTL
     public class TLSerializersBucket
     {
         private static readonly Type _GenericListType = typeof (List<>);
+        private static readonly Type _ObjectType = typeof (Object);
         private static readonly Type _GenericTLVectorSerializerType = typeof (TLVectorSerializer<>);
         private readonly Dictionary<uint, ITLSerializer> _constructorNumberSerializersIndex = new Dictionary<uint, ITLSerializer>();
         private readonly Dictionary<Type, ITLSerializer> _serializersIndex = new Dictionary<Type, ITLSerializer>();
@@ -25,15 +26,23 @@ namespace SharpTL
         /// <summary>
         /// Initializes a new instance of the <see cref="TLSerializersBucket"/> class.
         /// </summary>
-        public TLSerializersBucket()
+        public TLSerializersBucket() : this(false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TLSerializersBucket"/> class.
+        /// </summary>
+        /// <param name="isDurovMode">In Durov mode Bytes is an alias for String type hence both serializers have the same constructor numbers.</param>
+        public TLSerializersBucket(bool isDurovMode)
         {
             // Add base type serializers.
-            foreach (var serializer in BuiltIn.BaseTypeSerializers)
+            foreach (var serializer in isDurovMode ? BuiltIn.DurovBaseTypeSerializers : BuiltIn.BaseTypeSerializers)
             {
                 Add(serializer);
             }
         }
-
+        
         /// <summary>
         ///     Get TL serializer for an object type.
         /// </summary>
@@ -44,7 +53,11 @@ namespace SharpTL
             get
             {
                 PrepareSerializer(type);
-                return _serializersIndex.ContainsKey(type) ? _serializersIndex[type] : null;
+                if (!_serializersIndex.ContainsKey(type))
+                {
+                    throw new TLSerializerNotFoundException(string.Format("There is no serializer for a type: '{0}'.", type.FullName));
+                }
+                return _serializersIndex[type];
             }
         }
 
@@ -62,7 +75,7 @@ namespace SharpTL
                 {
                     return serializer;
                 }
-                return null;
+                throw new TLSerializerNotFoundException(string.Format("Constructor number: 0x{0:X8} is not supported by any registered serializer.", constructorNumber));
             }
         }
 
@@ -108,6 +121,11 @@ namespace SharpTL
         /// <param name="objType">Object type.</param>
         public void PrepareSerializer(Type objType)
         {
+            if (objType == _ObjectType)
+            {
+                return;
+            }
+
             if (Contains(objType))
             {
                 return;
@@ -115,6 +133,7 @@ namespace SharpTL
 
             TypeInfo objTypeInfo = objType.GetTypeInfo();
 
+            // TLType.
             if (objTypeInfo.IsInterface)
             {
                 var tlTypeAttribute = objTypeInfo.GetCustomAttribute<TLTypeAttribute>();
@@ -138,29 +157,42 @@ namespace SharpTL
                 return;
             }
 
+            // TLObject.
             var tlObjectAttribute = objTypeInfo.GetCustomAttribute<TLObjectAttribute>();
             if (tlObjectAttribute != null)
             {
-                // There is a TLObjectAttribute, then use this meta-info to create properties map for object serialization.
-                List<TLPropertyInfo> props =
-                    objTypeInfo.DeclaredProperties.Zip(objTypeInfo.DeclaredProperties.Select(info => info.GetCustomAttribute<TLPropertyAttribute>()),
-                        (info, attribute) => new Tuple<PropertyInfo, TLPropertyAttribute>(info, attribute))
-                        .Where(tuple => tuple.Item2 != null)
-                        .Select(tuple => new TLPropertyInfo(tuple.Item2.Order, tuple.Item1, tuple.Item2.SerializationModeOverride))
-                        .ToList();
-
-                Add(new TLCustomObjectSerializer(tlObjectAttribute.ConstructorNumber, objType, props, tlObjectAttribute.SerializationMode));
-
-                foreach (TLPropertyInfo tlPropertyInfo in props)
+                // Check for custom serializer.
+                if (tlObjectAttribute.CustomSerializerType != null)
                 {
-                    PrepareSerializer(tlPropertyInfo.PropertyInfo.PropertyType /*, tlPropertyInfo.PropertyInfo.GetCustomAttributes()*/);
+                    var customSerializer = (ITLSingleConstructorSerializer) Activator.CreateInstance(tlObjectAttribute.CustomSerializerType);
+                    Add(customSerializer);
+                }
+                else
+                {
+                    /*
+                     * There is a TLObjectAttribute without custom serializer,
+                     * then use this meta-info to create properties map for object serialization based on TLProperty attributes. 
+                     */
+                    List<TLPropertyInfo> props =
+                        objTypeInfo.DeclaredProperties.Zip(objTypeInfo.DeclaredProperties.Select(info => info.GetCustomAttribute<TLPropertyAttribute>()),
+                            (info, attribute) => new Tuple<PropertyInfo, TLPropertyAttribute>(info, attribute))
+                            .Where(tuple => tuple.Item2 != null)
+                            .Select(tuple => new TLPropertyInfo(tuple.Item2.Order, tuple.Item1, tuple.Item2.SerializationModeOverride))
+                            .ToList();
+
+                    Add(new TLCustomObjectSerializer(tlObjectAttribute.ConstructorNumber, objType, props, tlObjectAttribute.SerializationMode));
+
+                    foreach (TLPropertyInfo tlPropertyInfo in props)
+                    {
+                        PrepareSerializer(tlPropertyInfo.PropertyInfo.PropertyType);
+                    }
                 }
             }
             else
             {
                 // Otherwise check for base supported types.
                 // List<> will be serialized as built-in type 'vector'.
-                if (objType.GetTypeInfo().IsGenericType && objType.GetGenericTypeDefinition() == _GenericListType)
+                if (objTypeInfo.IsGenericType && objType.GetGenericTypeDefinition() == _GenericListType)
                 {
                     Type genericVectorSerializerType = _GenericTLVectorSerializerType.MakeGenericType(objTypeInfo.GenericTypeArguments[0]);
                     var serializer = (ITLSerializer) Activator.CreateInstance(genericVectorSerializerType);

@@ -82,7 +82,7 @@ namespace SharpTL.Compiler.CLI
             catch (ArgException ex)
             {
                 Console.WriteLine(ex.Message);
-                ArgUsage.GetStyledUsage<CompilerArgs>().Write();
+                ArgUsage.GenerateUsageFromTemplate<CompilerArgs>().Write();
             }
         }
     }

@@ -9,9 +9,27 @@ using System;
 namespace SharpTL
 {
     /// <summary>
-    /// Invalid TL constructor number exception.
+    ///     TL serialization exception.
     /// </summary>
-    public class InvalidTLConstructorNumberException : Exception
+    public class TLSerializationException : Exception
+    {
+        public TLSerializationException()
+        {
+        }
+
+        public TLSerializationException(string message) : base(message)
+        {
+        }
+
+        public TLSerializationException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+    }
+
+    /// <summary>
+    ///     Invalid TL constructor number exception.
+    /// </summary>
+    public class InvalidTLConstructorNumberException : TLSerializationException
     {
         public InvalidTLConstructorNumberException()
         {
@@ -23,7 +41,7 @@ namespace SharpTL
     }
 
     /// <summary>
-    /// Invalid TL-schema exception.
+    ///     Invalid TL-schema exception.
     /// </summary>
     public class InvalidTLSchemaException : Exception
     {
@@ -40,7 +58,10 @@ namespace SharpTL
         }
     }
 
-    public class TLSerializerNotFoundException : Exception
+    /// <summary>
+    ///     TL serializer not found exception.
+    /// </summary>
+    public class TLSerializerNotFoundException : TLSerializationException
     {
         public TLSerializerNotFoundException()
         {

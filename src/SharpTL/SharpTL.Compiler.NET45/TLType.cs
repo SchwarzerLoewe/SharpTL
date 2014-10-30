@@ -19,27 +19,45 @@ namespace SharpTL.Compiler
     public class TLType : IEquatable<TLType>
     {
         private int _lastHashCode;
+        private string _name;
         private string _text;
 
         public TLType(string name, bool autoConvertToConventionalCase = true)
         {
             OriginalName = name;
-            Name = autoConvertToConventionalCase ? "I" + name.ToConventionalCase(Case.PascalCase) : name;
+            _name = autoConvertToConventionalCase ? ConvertToConventionalName(name) : name;
             Constructors = new List<TLCombinator>();
         }
 
-        public string OriginalName { get; set; }
+        public string OriginalName { get; private set; }
 
-        public string Name { get; set; }
+        /// <summary>
+        ///     Name of a TL type. Always returns ClrType.FullName in case when <see cref="ClrType" /> proprty is not null.
+        /// </summary>
+        public string Name
+        {
+            get { return ClrType != null ? ClrType.FullName : _name; }
+            set { _name = value; }
+        }
+
+        /// <summary>
+        ///     If set, then the <see cref="Name" /> property will always return ClrType.FullName.
+        /// </summary>
+        public Type ClrType { get; set; }
 
         public bool IsVoid
         {
             get { return Name == "void"; }
         }
 
+        public bool IsObjectPseudotype
+        {
+            get { return ClrType == typeof(object); }
+        }
+
         public uint? Number
         {
-            get { return Constructors != null && Constructors.Count > 0 ? Constructors.Select(ctr => ctr.Number).Aggregate((u, u1) => unchecked(u + u1)) : (uint?)null; }
+            get { return Constructors != null && Constructors.Count > 0 ? Constructors.Select(ctr => ctr.Number).Aggregate((u, u1) => unchecked(u + u1)) : (uint?) null; }
         }
 
         public List<TLCombinator> Constructors { get; set; }
@@ -49,6 +67,11 @@ namespace SharpTL.Compiler
         public string Text
         {
             get { return ToString(); }
+        }
+
+        private string ConvertToConventionalName(string name)
+        {
+            return "I" + name.ToConventionalCase(Case.PascalCase);
         }
 
         public override string ToString()
@@ -89,7 +112,7 @@ namespace SharpTL.Compiler
             {
                 return true;
             }
-            if (obj.GetType() != this.GetType())
+            if (obj.GetType() != GetType())
             {
                 return false;
             }

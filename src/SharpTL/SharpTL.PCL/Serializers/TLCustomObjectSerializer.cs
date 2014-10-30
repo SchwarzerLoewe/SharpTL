@@ -47,19 +47,32 @@ namespace SharpTL.Serializers
                 PropertyInfo propertyInfo = tlPropertyInfo.PropertyInfo;
 
                 Type propType = propertyInfo.PropertyType;
+
                 object propertyValue = propertyInfo.GetValue(obj);
 
-                ITLSerializer tlSerializer = context.Rig.GetSerializerByObjectType(propType);
-
-                if (tlSerializer is ITLVectorSerializer)
+                if (propType == typeof (object))
                 {
-                    var vectorSerializer = tlSerializer as ITLVectorSerializer;
-                    TLSerializationMode? itemsSerializationModeOverride = GetVectorItemsSerializationModeOverride(vectorSerializer, propertyInfo, context);
-                    vectorSerializer.Write(propertyValue, context, tlPropertyInfo.SerializationModeOverride, itemsSerializationModeOverride);
+                    /*
+                     * https://core.telegram.org/mtproto/serialize#object-pseudotype
+                     * Object Pseudotype
+                     * The Object pseudotype is a “type” which can take on values that belong to any boxed type in the schema.
+                     */
+                    TLRig.Serialize(propertyValue, context, TLSerializationMode.Boxed);
                 }
                 else
                 {
-                    tlSerializer.Write(propertyValue, context, tlPropertyInfo.SerializationModeOverride);
+                    ITLSerializer tlSerializer = context.Rig.GetSerializerByObjectType(propType);
+
+                    if (tlSerializer is ITLVectorSerializer)
+                    {
+                        var vectorSerializer = tlSerializer as ITLVectorSerializer;
+                        TLSerializationMode? itemsSerializationModeOverride = GetVectorItemsSerializationModeOverride(vectorSerializer, propertyInfo, context);
+                        vectorSerializer.Write(propertyValue, context, tlPropertyInfo.SerializationModeOverride, itemsSerializationModeOverride);
+                    }
+                    else
+                    {
+                        tlSerializer.Write(propertyValue, context, tlPropertyInfo.SerializationModeOverride);
+                    }
                 }
             }
         }
@@ -75,18 +88,29 @@ namespace SharpTL.Serializers
                 object propertyValue;
 
                 Type propType = propertyInfo.PropertyType;
-
-                ITLSerializer tlSerializer = context.Rig.GetSerializerByObjectType(propType);
-
-                if (tlSerializer is ITLVectorSerializer)
+                if (propType == typeof (object))
                 {
-                    var vectorSerializer = tlSerializer as ITLVectorSerializer;
-                    TLSerializationMode? itemsSerializationModeOverride = GetVectorItemsSerializationModeOverride(vectorSerializer, propertyInfo, context);
-                    propertyValue = vectorSerializer.Read(context, tlPropertyInfo.SerializationModeOverride, itemsSerializationModeOverride);
+                    /*
+                     * https://core.telegram.org/mtproto/serialize#object-pseudotype
+                     * Object Pseudotype
+                     * The Object pseudotype is a “type” which can take on values that belong to any boxed type in the schema.
+                     */
+                    propertyValue = TLRig.Deserialize<object>(context, TLSerializationMode.Boxed);
                 }
                 else
                 {
-                    propertyValue = tlSerializer.Read(context, tlPropertyInfo.SerializationModeOverride);
+                    ITLSerializer tlSerializer = context.Rig.GetSerializerByObjectType(propType);
+                    
+                    if (tlSerializer is ITLVectorSerializer)
+                    {
+                        var vectorSerializer = tlSerializer as ITLVectorSerializer;
+                        TLSerializationMode? itemsSerializationModeOverride = GetVectorItemsSerializationModeOverride(vectorSerializer, propertyInfo, context);
+                        propertyValue = vectorSerializer.Read(context, tlPropertyInfo.SerializationModeOverride, itemsSerializationModeOverride);
+                    }
+                    else
+                    {
+                        propertyValue = tlSerializer.Read(context, tlPropertyInfo.SerializationModeOverride);
+                    }
                 }
                 tlPropertyInfo.PropertyInfo.SetValue(obj, propertyValue);
             }

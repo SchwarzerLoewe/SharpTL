@@ -43,6 +43,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Exceptions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ITLSerializer.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Serializers\BuiltIn.cs" />
@@ -50,6 +51,7 @@
     <Compile Include="Serializers\Int256Serializer.cs" />
     <Compile Include="ITLVectorSerializer.cs" />
     <Compile Include="Serializers\TLBytesSerializer.cs" />
+    <Compile Include="Serializers\TLSerializer.cs" />
     <Compile Include="TLSerializationContext.cs" />
     <Compile Include="Serializers\BooleanSerializer.cs" />
     <Compile Include="Serializers\DoubleSerializer.cs" />
@@ -75,7 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="BigMath">
-      <HintPath>..\packages\BigMath.0.4.1.0\lib\portable-net45+wp8+win8\BigMath.dll</HintPath>
+      <HintPath>..\packages\BigMath.0.4.3\lib\portable-net45+wp8+win8\BigMath.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

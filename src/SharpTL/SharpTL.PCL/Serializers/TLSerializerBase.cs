@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
+using SharpTL.Annotations;
 
 namespace SharpTL.Serializers
 {
@@ -28,8 +29,18 @@ namespace SharpTL.Serializers
         /// <param name="obj">Object to be serialized.</param>
         /// <param name="context">Serialization context.</param>
         /// <param name="modeOverride">Override of default type serialization mode.</param>
-        public virtual void Write(object obj, TLSerializationContext context, TLSerializationMode? modeOverride = null)
+        public virtual void Write([NotNull] object obj, TLSerializationContext context, TLSerializationMode? modeOverride = null)
         {
+            if (obj == null)
+            {
+                throw new ArgumentNullException("obj");
+            }
+
+            if (obj.GetType() != SupportedType)
+            {
+                throw new TLSerializationException(string.Format("Expected object of type {0}, actual object type {1}.", SupportedType, obj.GetType()));
+            }
+
             WriteHeader(context, modeOverride);
             WriteBody(obj, context);
         }

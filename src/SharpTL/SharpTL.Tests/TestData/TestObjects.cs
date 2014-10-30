@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TestObjects.cs">
-//   Copyright (c) 2013 Alexander Logger. All rights reserved.
+//   Copyright (c) 2013-2014 Alexander Logger. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -46,6 +46,9 @@ namespace SharpTL.Tests.TestData
         [TLProperty(10, TLSerializationMode.Bare)]
         public List<int> TestIntBareVector { get; set; }
 
+        [TLProperty(11)]
+        public object TestInnerObject { get; set; }
+
         #region Equality
         public bool Equals(TestObject other)
         {
@@ -57,8 +60,10 @@ namespace SharpTL.Tests.TestData
             {
                 return true;
             }
-            return TestBoolean.Equals(other.TestBoolean) && TestDouble.Equals(other.TestDouble) && TestInt == other.TestInt && TestIntVector.SequenceEqual(other.TestIntVector) &&
-                TestLong == other.TestLong && string.Equals(TestString, other.TestString) && TestInt128 == other.TestInt128 && TestInt256 == other.TestInt256;
+            return TestBoolean.Equals(other.TestBoolean) && TestDouble.Equals(other.TestDouble) && TestInt == other.TestInt &&
+                TestIntVector.SequenceEqual(other.TestIntVector) && TestLong == other.TestLong && string.Equals(TestString, other.TestString) &&
+                TestInt128 == other.TestInt128 && TestInt256 == other.TestInt256 && TestUsersVector.SequenceEqual(other.TestUsersVector) &&
+                TestIntBareVector.SequenceEqual(other.TestIntBareVector);
         }
 
         public override bool Equals(object obj)
@@ -90,6 +95,8 @@ namespace SharpTL.Tests.TestData
                 hashCode = (hashCode*397) ^ (TestString != null ? TestString.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ TestInt128.GetHashCode();
                 hashCode = (hashCode*397) ^ TestInt256.GetHashCode();
+                hashCode = (hashCode*397) ^ (TestUsersVector != null ? TestUsersVector.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (TestIntBareVector != null ? TestIntBareVector.GetHashCode() : 0);
                 return hashCode;
             }
         }

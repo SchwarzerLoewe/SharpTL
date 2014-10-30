@@ -55,7 +55,7 @@ namespace SharpTL.Serializers
             ITLSingleConstructorSerializer serializer;
             if (!_serializersConstructorNumberIndex.TryGetValue(constructorNumber, out serializer))
             {
-                throw new NotSupportedException(string.Format("Construction number '{0}' is not supported by this serializer.", constructorNumber));
+                throw new NotSupportedException(string.Format("Construction number 0x{0:X} is not supported by this serializer.", constructorNumber));
             }
 
             return serializer.Read(context, TLSerializationMode.Bare);

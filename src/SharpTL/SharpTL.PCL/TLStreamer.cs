@@ -1,10 +1,11 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TLStreamer.cs">
-//   Copyright (c) 2013 Alexander Logger. All rights reserved.
+//   Copyright (c) 2013-2014 Alexander Logger. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using BigMath;
@@ -22,6 +23,7 @@ namespace SharpTL
         private static readonly byte[] ZeroBuffer = new byte[3];
         private readonly byte[] _buffer = new byte[BufferLength];
         private readonly bool _leaveOpen;
+        private readonly Stack<long> _positionStack = new Stack<long>();
         private bool _disposed;
         private Stream _stream;
         private bool _streamAsLittleEndianInternal = true;
@@ -90,6 +92,14 @@ namespace SharpTL
         {
             get { return _stream.Position; }
             set { _stream.Position = value; }
+        }
+
+        /// <summary>
+        ///     Bytes till end.
+        /// </summary>
+        public virtual long BytesTillEnd
+        {
+            get { return Length - Position; }
         }
 
         /// <summary>
@@ -452,6 +462,22 @@ namespace SharpTL
         public override void Flush()
         {
             _stream.Flush();
+        }
+
+        /// <summary>
+        ///     Push current position to a stack.
+        /// </summary>
+        public void PushPosition()
+        {
+            _positionStack.Push(Position);
+        }
+
+        /// <summary>
+        ///     Pop current position from a stack.
+        /// </summary>
+        public void PopPosition()
+        {
+            Position = _positionStack.Pop();
         }
 
         /// <summary>

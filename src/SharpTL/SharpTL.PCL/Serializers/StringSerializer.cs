@@ -39,7 +39,6 @@ namespace SharpTL.Serializers
             var str = (string) obj;
             TLStreamer streamer = context.Streamer;
 
-            // TODO: ensure encoding.
             byte[] bytes = Encoding.GetBytes(str);
 
             streamer.WriteTLBytes(bytes);
