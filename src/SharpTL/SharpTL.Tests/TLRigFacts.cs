@@ -52,6 +52,33 @@ namespace SharpTL.Tests
             Assert.AreEqual(vector, deserializedVector);
         }
 
+        [Test]
+        public void Should_serialize_and_deserialize_list_of_objects_with_custom_serializer()
+        {
+            var obj = new List<TestCustomSerializerObject>
+            {
+                new TestCustomSerializerObject(1, 1, 1),
+                new TestCustomSerializerObject(2, 2, 2),
+                new TestCustomSerializerObject(3, 3, 3)
+            };
+            Should_serialize_and_deserialize(obj);
+        }
+
+        [Test]
+        public void Should_serialize_and_deserialize_object_with_custom_serializer()
+        {
+            var obj = new TestCustomSerializerObject(100500, 9, "Does anybody really know the secret?");
+            Should_serialize_and_deserialize(obj);
+        }
+
+        private static void Should_serialize_and_deserialize<T>(T obj)
+        {
+            byte[] objBytes = TLRig.Default.Serialize(obj);
+            var deserializedObj = TLRig.Default.Deserialize<T>(objBytes);
+            deserializedObj.Should().NotBeNull();
+            deserializedObj.ShouldBeEquivalentTo(obj);
+        }
+
         [Test, TestCaseSource(typeof (TestCases), "SerializationTestCasesData")]
         public byte[] Should_serialize_object(object obj)
         {
@@ -62,17 +89,6 @@ namespace SharpTL.Tests
         public void Should_throw_not_supported_exception()
         {
             new object().Invoking(o => TLRig.Default.Serialize(o, new MemoryStream(0))).ShouldThrow<TLSerializerNotFoundException>();
-        }
-
-        [Test]
-        public void Should_serialize_object_with_custom_serializer()
-        {
-            var obj = new TestCustomSerializerObject(100500, 9, "Does anybody really know the secret?");
-            var objBytes = TLRig.Default.Serialize(obj);
-            var deserializedObj = TLRig.Default.Deserialize(objBytes);
-            deserializedObj.Should().BeOfType(typeof (TestCustomSerializerObject));
-            var actualObj = deserializedObj as TestCustomSerializerObject;
-            actualObj.ShouldBeEquivalentTo(obj);
         }
     }
 }
