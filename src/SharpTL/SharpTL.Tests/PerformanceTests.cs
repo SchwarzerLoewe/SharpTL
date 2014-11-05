@@ -29,7 +29,7 @@ namespace SharpTL.Tests
             PerormanceTestObject perormanceTestObject = CreateTestObject();
 
             var b = new byte[0];
-            var bytes = new byte[1000000];
+            var bytes = new byte[1000];
             using (var memoryStream = new MemoryStream(bytes))
             {
                 memoryStream.SetLength(0);
