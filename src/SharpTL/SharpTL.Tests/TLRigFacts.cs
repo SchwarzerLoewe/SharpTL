@@ -24,7 +24,6 @@ namespace SharpTL.Tests
         }
 
         [Test]
-        //[Ignore("There is a problem in distinguishing of 'string' and 'byte[]' types in Durov mode")]
         public void Should_serialize_and_deserialize_heterogeneous_vector()
         {
             TLRig.Default.PrepareSerializersForAllTLObjectsInAssembly(Assembly.GetExecutingAssembly());
@@ -44,12 +43,12 @@ namespace SharpTL.Tests
                     new NoUser {Id = 3}
                 }
             };
+
             byte[] bytes = TLRig.Default.Serialize(vector);
+            var deserializedVector = TLRig.Default.Deserialize<List<object>>(bytes);
 
-            var deserializedVector = TLRig.Default.Deserialize(bytes) as List<object>;
             deserializedVector.Should().NotBeNull();
-
-            Assert.AreEqual(vector, deserializedVector);
+            CollectionAssert.AreEqual(vector, deserializedVector);
         }
 
         [Test]
