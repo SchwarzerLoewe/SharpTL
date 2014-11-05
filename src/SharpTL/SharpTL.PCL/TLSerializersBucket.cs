@@ -52,12 +52,16 @@ namespace SharpTL
         {
             get
             {
-                PrepareSerializer(type);
-                if (!_serializersIndex.ContainsKey(type))
+                ITLSerializer serializer;
+                if (!_serializersIndex.TryGetValue(type, out serializer))
                 {
-                    throw new TLSerializerNotFoundException(string.Format("There is no serializer for a type: '{0}'.", type.FullName));
+                    PrepareSerializer(type);
+                    if (!_serializersIndex.TryGetValue(type, out serializer))
+                    {
+                        throw new TLSerializerNotFoundException(string.Format("There is no serializer for a type: '{0}'.", type.FullName));
+                    }
                 }
-                return _serializersIndex[type];
+                return serializer;
             }
         }
 
