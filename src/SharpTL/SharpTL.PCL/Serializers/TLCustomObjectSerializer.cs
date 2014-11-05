@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using Dynamitey;
 
 namespace SharpTL.Serializers
 {
@@ -162,31 +163,33 @@ namespace SharpTL.Serializers
         {
             protected readonly TLPropertyInfo TLPropertyInfo;
 
-            private readonly Func<object, object> _getPropertyValue;
-            private readonly Action<object, object> _setPropertyValue;
+            private readonly CacheableInvocation _get;
+            private readonly CacheableInvocation _set;
 
             protected TLPropertySerializationAgentBase(TLPropertyInfo tlPropertyInfo)
             {
                 TLPropertyInfo = tlPropertyInfo;
 
-                _getPropertyValue = TLPropertyInfo.PropertyInfo.GetValue;
-                _setPropertyValue = TLPropertyInfo.PropertyInfo.SetValue;
+                string propertyName = TLPropertyInfo.PropertyInfo.Name;
+
+                _get = new CacheableInvocation(InvocationKind.Get, propertyName);
+                _set = new CacheableInvocation(InvocationKind.Set, propertyName, 1);
             }
 
             public void Write(object obj, TLSerializationContext context)
             {
-                object propertyValue = _getPropertyValue(obj);
+                object propertyValue = _get.Invoke(obj);
                 WriteValue(propertyValue, context);
             }
 
             public void Read(object obj, TLSerializationContext context)
             {
-                object value = ReadValue(obj, context);
-                _setPropertyValue(obj, value);
+                object value = ReadValue(context);
+                _set.Invoke(obj, value);
             }
 
             protected abstract void WriteValue(object propertyValue, TLSerializationContext context);
-            protected abstract object ReadValue(object obj, TLSerializationContext context);
+            protected abstract object ReadValue(TLSerializationContext context);
         }
 
         /// <summary>
@@ -203,7 +206,7 @@ namespace SharpTL.Serializers
                 TLRig.Serialize(propertyValue, context, TLSerializationMode.Boxed);
             }
 
-            protected override object ReadValue(object obj, TLSerializationContext context)
+            protected override object ReadValue(TLSerializationContext context)
             {
                 return TLRig.Deserialize<object>(context, TLSerializationMode.Boxed);
             }
@@ -226,7 +229,7 @@ namespace SharpTL.Serializers
                 _serializer.Write(propertyValue, context, TLPropertyInfo.SerializationModeOverride);
             }
 
-            protected override object ReadValue(object obj, TLSerializationContext context)
+            protected override object ReadValue(TLSerializationContext context)
             {
                 return _serializer.Read(context, TLPropertyInfo.SerializationModeOverride);
             }
@@ -252,7 +255,7 @@ namespace SharpTL.Serializers
                 _serializer.Write(propertyValue, context, TLPropertyInfo.SerializationModeOverride, _itemsSerializationModeOverride);
             }
 
-            protected override object ReadValue(object obj, TLSerializationContext context)
+            protected override object ReadValue(TLSerializationContext context)
             {
                 return _serializer.Read(context, TLPropertyInfo.SerializationModeOverride, _itemsSerializationModeOverride);
             }
