@@ -122,6 +122,15 @@ namespace SharpTL
         /// <summary>
         ///     Prepare serializer for an object type.
         /// </summary>
+        /// <typeparam name="T">Type of an object.</typeparam>
+        public void PrepareSerializer<T>()
+        {
+            PrepareSerializer(typeof (T));
+        }
+
+        /// <summary>
+        ///     Prepare serializer for an object type.
+        /// </summary>
         /// <param name="objType">Object type.</param>
         public void PrepareSerializer(Type objType)
         {

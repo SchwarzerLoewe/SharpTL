@@ -66,7 +66,7 @@ namespace SharpTL.Tests
                 double sharpTLTime;
                 {
                     sw.Restart();
-                    TLRig.Default.PrepareSerializersForAllTLObjectsInAssembly(typeof (PerormanceTestObject).Assembly);
+                    TLRig.Default.PrepareSerializer<PerormanceTestObject>();
                     sw.Stop();
                     Console.WriteLine("Serializer prepared in {0} ms.", sw.ElapsedMilliseconds);
 

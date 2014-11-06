@@ -225,6 +225,15 @@ namespace SharpTL
         }
 
         /// <summary>
+        ///     Prepare serializer for an object type.
+        /// </summary>
+        /// <typeparam name="T">Type of an object.</typeparam>
+        public void PrepareSerializer<T>()
+        {
+            _serializersBucket.PrepareSerializer<T>();
+        }
+
+        /// <summary>
         ///     Prepare serializers for all TL objects in an assembly.
         ///     For all objects with TLObject attribute should be prepared a serializer.
         /// </summary>
