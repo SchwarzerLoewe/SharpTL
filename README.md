@@ -85,3 +85,54 @@ It is possible to automatically convert a TL-schema (json/tl) to C# object model
 Usage example:
 
     SharpTL.Compiler.CLI.exe compile json MTProto.json MTProto.cs MTProtoSchema
+
+## Change log ##
+**SharpTL 0.7.1**
+
+- Significantly increased serialization performance of `TLCustomObjectSerializer` (up to 5x faster than in SharpTL 7.0).
+- Added dependency for the 'Dynamitey' package.
+
+**SharpTL 0.7**
+
+- Added support of the `Object` Pseudotype.
+- Added generic `TLSerializer<T>`.
+- Added `CustomSerializerType` support for `TLObject`.
+- TLRig: added serialization/deserialization to/from `TLStreamer`.
+- Added «Durov mode» to `TLBytesSerializer`. In «Durov mode» `Bytes` is an alias for `String` type hence both serializers have the same constructor numbers.
+
+**SharpTL 0.6**
+
+- Added support for bare vector serialization in the `TLSchemaCompiler`.
+- Added `Read()` method with items serialization mode override for `TLVerctorSerializer`.
+
+**SharpTL 0.5**
+
+- Fixed problem with zero length on `TLStreamer.WriteRandomData(int length)`.
+- Changed `TLStreamer` API names conventions (e.g. `ReadUInt` -> `ReadUInt32`).
+
+**SharpTL 0.4.1**
+
+- Removed `CRC32` (now in the `BigMath` lib).
+- Minor changes to the `TLStreamer`.
+
+**SharpTL 0.4**
+
+- Improved `TLStreamer`.
+- Added support of serialization mode override to some methods of the `TLRig`.
+- Renamed `TLStreamer.WriteAllBytes()` to `TLStreamer.Write()`.
+
+**SharpTL 0.3**
+
+- Added a `leaveOpen` (underlying stream) parameter to `TLStreamer`.
+- Added `TLBitConverter`.
+- Implemented serializers for `Int128` and `Int256`.
+- `Int128` and `Int256` base types moved to `BigMath` repo.
+
+**SharpTL 0.2**
+
+- Added base types `Int128`, `Int256`, and `TLBytesSerializer`.
+- Added `SharpTL.Compiler`.
+
+**SharpTL 0.1**
+
+- Implemented serializers for base TL types and custom objects.
