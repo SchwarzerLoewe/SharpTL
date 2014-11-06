@@ -58,7 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PerformanceTests.cs" />
     <Compile Include="StringUtilsFacts.cs" />
     <Compile Include="TestData\TestCustomSerializerObjects.cs" />
     <Compile Include="TLShemaCompilerFacts.cs" />
