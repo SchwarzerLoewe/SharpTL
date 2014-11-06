@@ -52,12 +52,16 @@ namespace SharpTL
         {
             get
             {
-                PrepareSerializer(type);
-                if (!_serializersIndex.ContainsKey(type))
+                ITLSerializer serializer;
+                if (!_serializersIndex.TryGetValue(type, out serializer))
                 {
-                    throw new TLSerializerNotFoundException(string.Format("There is no serializer for a type: '{0}'.", type.FullName));
+                    PrepareSerializer(type);
+                    if (!_serializersIndex.TryGetValue(type, out serializer))
+                    {
+                        throw new TLSerializerNotFoundException(string.Format("There is no serializer for a type: '{0}'.", type.FullName));
+                    }
                 }
-                return _serializersIndex[type];
+                return serializer;
             }
         }
 
@@ -180,7 +184,7 @@ namespace SharpTL
                             .Select(tuple => new TLPropertyInfo(tuple.Item2.Order, tuple.Item1, tuple.Item2.SerializationModeOverride))
                             .ToList();
 
-                    Add(new TLCustomObjectSerializer(tlObjectAttribute.ConstructorNumber, objType, props, tlObjectAttribute.SerializationMode));
+                    Add(new TLCustomObjectSerializer(tlObjectAttribute.ConstructorNumber, objType, props, this, tlObjectAttribute.SerializationMode));
 
                     foreach (TLPropertyInfo tlPropertyInfo in props)
                     {
