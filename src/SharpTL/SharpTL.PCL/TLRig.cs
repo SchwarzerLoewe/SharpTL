@@ -258,6 +258,11 @@ namespace SharpTL
             var objType = obj.GetType();
 
             ITLSerializer serializer = context.Rig.GetSerializerByObjectType(objType);
+            if (serializer == null)
+            {
+                throw new TLSerializerNotFoundException(string.Format("There is no serializer for a type: '{0}'.", objType.FullName));
+            }
+
             serializer.Write(obj, context, modeOverride);
         }
 
@@ -282,7 +287,11 @@ namespace SharpTL
             streamer.PopPosition();
 
             ITLSerializer serializer = context.Rig.GetSerializerByConstructorNumber(constructorNumber);
-            
+            if (serializer == null)
+            {
+                throw new TLSerializerNotFoundException(string.Format("Constructor number: 0x{0:X8} is not supported by any registered serializer.", constructorNumber));
+            }
+
             return serializer.Read(context, TLSerializationMode.Boxed);
         }
 
