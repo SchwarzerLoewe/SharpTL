@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -75,7 +76,18 @@ namespace SharpTL.Tests
             byte[] objBytes = TLRig.Default.Serialize(obj);
             var deserializedObj = TLRig.Default.Deserialize<T>(objBytes);
             deserializedObj.Should().NotBeNull();
-            deserializedObj.ShouldBeEquivalentTo(obj);
+            
+            var list = obj as IEnumerable;
+            if (list != null)
+            {
+                deserializedObj.Should().BeAssignableTo<IEnumerable>();
+                var desList = (IEnumerable) deserializedObj;
+                desList.Should().Equal(list);
+            }
+            else
+            {
+                deserializedObj.Should().Be(obj);
+            }
         }
 
         [Test, TestCaseSource(typeof (TestCases), "SerializationTestCasesData")]
