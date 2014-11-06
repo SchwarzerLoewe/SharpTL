@@ -87,6 +87,13 @@ Usage example:
     SharpTL.Compiler.CLI.exe compile json MTProto.json MTProto.cs MTProtoSchema
 
 ## Change log ##
+
+**SharpTL 0.7.2**
+
+- Improved performance of `TLVectorSerializer`.
+- Added `PrepareSerializer<T>()` method to the `TLRig`.
+- Change behavior of getting serializer from `TLRig`. Now result can be null instead of throwing an exception.
+
 **SharpTL 0.7.1**
 
 - Significantly increased serialization performance of `TLCustomObjectSerializer` (up to 5x faster than in SharpTL 7.0).
