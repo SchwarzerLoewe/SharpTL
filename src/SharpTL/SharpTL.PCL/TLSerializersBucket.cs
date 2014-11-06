@@ -53,15 +53,12 @@ namespace SharpTL
             get
             {
                 ITLSerializer serializer;
-                if (!_serializersIndex.TryGetValue(type, out serializer))
+                if (_serializersIndex.TryGetValue(type, out serializer))
                 {
-                    PrepareSerializer(type);
-                    if (!_serializersIndex.TryGetValue(type, out serializer))
-                    {
-                        throw new TLSerializerNotFoundException(string.Format("There is no serializer for a type: '{0}'.", type.FullName));
-                    }
+                    return serializer;
                 }
-                return serializer;
+                PrepareSerializer(type);
+                return _serializersIndex.TryGetValue(type, out serializer) ? serializer : null;
             }
         }
 
@@ -75,11 +72,7 @@ namespace SharpTL
             get
             {
                 ITLSerializer serializer;
-                if (_constructorNumberSerializersIndex.TryGetValue(constructorNumber, out serializer))
-                {
-                    return serializer;
-                }
-                throw new TLSerializerNotFoundException(string.Format("Constructor number: 0x{0:X8} is not supported by any registered serializer.", constructorNumber));
+                return _constructorNumberSerializersIndex.TryGetValue(constructorNumber, out serializer) ? serializer : null;
             }
         }
 
@@ -117,6 +110,15 @@ namespace SharpTL
                     }
                 }
             }
+        }
+
+        /// <summary>
+        ///     Prepare serializer for an object type.
+        /// </summary>
+        /// <typeparam name="T">Type of an object.</typeparam>
+        public void PrepareSerializer<T>()
+        {
+            PrepareSerializer(typeof (T));
         }
 
         /// <summary>
