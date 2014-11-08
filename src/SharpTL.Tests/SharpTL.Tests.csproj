@@ -75,6 +75,9 @@
     <None Include="TL-schemas\Test.tl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TL-schemas\TestTLSchema.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpTL.Compiler.NET45\SharpTL.Compiler.NET45.csproj">

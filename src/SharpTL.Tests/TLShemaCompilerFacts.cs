@@ -22,13 +22,13 @@ namespace SharpTL.Tests
 
         private static string GetTestTLJsonSchema()
         {
-            return File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TL-schemas", "mtproto.json"));
+            return File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TL-schemas", "TestTLSchema.json"));
         }
 
         [Test]
         public void Should_compile_TL_schema()
         {
-            string sharpTLSchemaCode = TLSchemaCompiler.CompileFromJson(GetTestTLJsonSchema(), "SharpTL.TestNamespace");
+            string sharpTLSchemaCode = TLSchema.CompileFromJson(GetTestTLJsonSchema(), "SharpTL.TestNamespace");
             sharpTLSchemaCode.Should().NotBeNullOrEmpty();
         }
     }

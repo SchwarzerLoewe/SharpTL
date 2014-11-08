@@ -1,36 +1,34 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TLSchemaCompiler.TL.cs">
-//   Copyright (c) 2013 Alexander Logger. All rights reserved.
+// <copyright file="TLSchema.TL.cs">
+//   Copyright (c) 2013-2014 Alexander Logger. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using BigMath.Utils;
 
 namespace SharpTL.Compiler
 {
-    /// <summary>
-    ///     TL-schema.
-    /// </summary>
-    public partial class TLSchemaCompiler
+    public partial class TLSchema
     {
         private static readonly Regex TLSchemaPartsRegex = new Regex(@"(?<Types>[\w\W\r\n]*)---functions---(?<Functions>[\w\W\r\n]*)");
         private static readonly Regex ReturnRegex = new Regex(@"\s*(\r\n|\n\r|\r|\n)+\s*");
 
         private static readonly Regex DeclarationRegex =
-            new Regex(@"[\s]*(?<Declaration>(?<CombinatorName>[\w-[#]]*)(?:\s|#(?<CombinatorNumber>[0-9a-fA-F]{1,8})\s*)?" +
-                @"(?<Parameters>[\w\W-[;=]]+?)??\s*?=\s*(?<TypeName>[\w\W]+?));");
+            new Regex(
+                @"[\s]*(?<Declaration>(?<CombinatorName>[\w-[#]]*)(?:\s|#(?<CombinatorNumber>[0-9a-fA-F]{1,8})\s*)?" +
+                    @"(?<Parameters>[\w\W-[;=]]+?)??\s*?=\s*(?<TypeName>[\w\W]+?));");
 
         private static readonly Regex SingleLineCommentRegex = new Regex("//.*$", RegexOptions.Multiline);
         private static readonly Regex MultiLineCommentRegex = new Regex(@"/\*.*?\*/", RegexOptions.Singleline);
 
-        public static string CompileFromTL(string tl, string defaultNamespace)
+        public static string CompileFromTL(string tlSchemaText, string @namespace)
         {
-            var compiler = new TLSchemaCompiler(defaultNamespace);
-            TLSchema schema = compiler.GetTLSchemaFromTL(tl);
-            return compiler.Compile(schema);
+            TLSchema schema = FromTL(tlSchemaText);
+            return schema.Compile(@namespace);
         }
 
         /// <summary>
@@ -38,10 +36,15 @@ namespace SharpTL.Compiler
         /// </summary>
         /// <param name="tlSchemaText">TL-schema.</param>
         /// <returns>Compiled TL-schema.</returns>
-        public TLSchema GetTLSchemaFromTL(string tlSchemaText)
+        public static TLSchema FromTL(string tlSchemaText)
         {
             // TODO: implement.
             throw new NotImplementedException();
+
+            var typesCache = new TLTypesBox();
+
+            IEnumerable<TLCombinator> constructors = new List<TLCombinator>();
+            IEnumerable<TLCombinator> methods = new List<TLCombinator>();
 
             tlSchemaText = RemoveComments(tlSchemaText);
             tlSchemaText = RemoveNewlines(tlSchemaText);
@@ -70,7 +73,7 @@ namespace SharpTL.Compiler
                 }
             }
 
-            return null;
+            return new TLSchema(constructors, methods);
         }
 
         private static string RemoveComments(string text)

@@ -34,10 +34,10 @@ namespace SharpTL.Compiler.CLI
             switch (args.SourceType)
             {
                 case SchemaSourceType.TL:
-                    compiled = TLSchemaCompiler.CompileFromTL(source, args.Namespace);
+                    compiled = TLSchema.CompileFromTL(source, args.Namespace);
                     break;
                 case SchemaSourceType.JSON:
-                    compiled = TLSchemaCompiler.CompileFromJson(source, args.Namespace);
+                    compiled = TLSchema.CompileFromJson(source, args.Namespace);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -14,6 +14,10 @@
 // ------------------------------------------------------------------------------
 
 #pragma warning disable 1591
+// ReSharper disable UnusedMember.Global
+// ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable InconsistentNaming
 namespace <#=_templateVars.Namespace #>
 {
     using SharpTL;
@@ -23,7 +27,7 @@ namespace <#=_templateVars.Namespace #>
 
 <#
     // Writing constructors with common types.
-    WriteTLObjects(_templateVars.Schema.Constructors, _templateVars.Schema.Types);
+    WriteTLObjects(_templateVars.Schema.Constructors, _templateVars.Schema.TypesBox.Where(type => type.HasConstructors));
 
     // Writing constructors without common types, because this is methods.
     // Hence method constructor is actually bunch of args to a method, which knows how to serialize itself.
@@ -33,7 +37,7 @@ namespace <#=_templateVars.Namespace #>
     // TL types.
 
 <#
-foreach (TLType type in _templateVars.Schema.Types)
+foreach (TLType type in from t in _templateVars.Schema.TypesBox where t.HasConstructors select t)
 {
 #>
     [TLType(<#=type.Constructors.Select(constructor => string.Format("typeof({0})", constructor.Name)).Aggregate((s, s1) => s + ", " + s1)
