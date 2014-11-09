@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="StringUtilsFacts.cs" />
     <Compile Include="TestData\TestCustomSerializerObjects.cs" />
+    <Compile Include="TLSerializersBucketFacts.cs" />
     <Compile Include="TLShemaCompilerFacts.cs" />
     <Compile Include="TLStreamerFacts.cs" />
     <Compile Include="TestData\TestCases.cs" />
