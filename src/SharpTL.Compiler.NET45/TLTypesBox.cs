@@ -11,7 +11,13 @@ namespace SharpTL.Compiler
 {
     public class TLTypesBox : IEnumerable<TLType>
     {
-        private readonly Dictionary<string, TLType> _tlTypes = new Dictionary<string, TLType> {{"void", new VoidTLType()}};
+        private readonly Dictionary<string, TLType> _tlTypes = new Dictionary<string, TLType>();
+        private readonly TLType _voidType = new VoidTLType();
+
+        public TLTypesBox()
+        {
+            AddSystemTypes();
+        }
 
         public TLType this[string typeName]
         {
@@ -52,6 +58,21 @@ namespace SharpTL.Compiler
             return _tlTypes.ContainsValue(tlType);
         }
 
+        public void Remove(string typeName)
+        {
+            if (!_tlTypes.ContainsKey(typeName))
+            {
+                throw new KeyNotFoundException(string.Format("Could not remove type. Type name '{0}' not found.", typeName));
+            }
+            _tlTypes.Remove(typeName);
+        }
+
+        public void Clear()
+        {
+            _tlTypes.Clear();
+            AddSystemTypes();
+        }
+
         public IEnumerator<TLType> GetEnumerator()
         {
             return _tlTypes.Values.GetEnumerator();
@@ -60,6 +81,11 @@ namespace SharpTL.Compiler
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        private void AddSystemTypes()
+        {
+            Add(_voidType);
         }
     }
 }

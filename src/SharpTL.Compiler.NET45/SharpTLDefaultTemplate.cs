@@ -62,7 +62,7 @@ namespace ");
             #line 28 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SharpTLDefaultTemplate.tt"
 
     // Writing constructors with common types.
-    WriteTLObjects(_templateVars.Schema.Constructors, _templateVars.Schema.TypesBox.Where(type => type.HasConstructors));
+    WriteTLObjects(_templateVars.Schema.Constructors, _templateVars.Schema.TypesBox.Where(t => t.HasConstructors && !t.IsBuiltIn));
 
     // Writing constructors without common types, because this is methods.
     // Hence method constructor is actually bunch of args to a method, which knows how to serialize itself.
@@ -75,7 +75,7 @@ namespace ");
             
             #line 39 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SharpTLDefaultTemplate.tt"
 
-foreach (TLType type in from t in _templateVars.Schema.TypesBox where t.HasConstructors select t)
+foreach (TLType type in from t in _templateVars.Schema.TypesBox where t.HasConstructors && !t.IsBuiltIn select t)
 {
 
             

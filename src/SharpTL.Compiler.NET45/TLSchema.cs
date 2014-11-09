@@ -43,9 +43,9 @@ namespace SharpTL.Compiler
             _constructors = new List<TLCombinator>(constructors);
             _methods = new List<TLCombinator>(methods);
 
-            UpdateTypeConstructors();
-            InitTLTypesBox();
-            FixTypes();
+            UpdateTypes();
+//            InitTLTypesBox();
+//            FixTypes();
         }
 
         public ReadOnlyCollection<TLCombinator> Constructors
@@ -70,20 +70,9 @@ namespace SharpTL.Compiler
             return template.TransformText();
         }
 
-        private void InitTLTypesBox()
+        public void UpdateTypes()
         {
-            foreach (TLCombinator constructor in _constructors.Union(_methods))
-            {
-                _typesBox.Add(constructor.Type);
-                foreach (TLCombinatorParameter parameter in constructor.Parameters)
-                {
-                    _typesBox.Add(parameter.Type);
-                }
-            }
-        }
-
-        public void UpdateTypeConstructors()
-        {
+            // Update types constructors.
             foreach (TLCombinator constructor in _constructors)
             {
                 constructor.Type.Constructors.Clear();
@@ -96,26 +85,19 @@ namespace SharpTL.Compiler
                     type.Constructors.Add(constructor);
                 }
             }
-        }
 
-        private static string GetBuiltInTypeName(uint constructorNumber)
-        {
-            return (from serializer in BuiltIn.BaseTypeSerializers
-                let singleConstructorSerializer = serializer as ITLSingleConstructorSerializer
-                let multiConstructorSerializer = serializer as ITLMultiConstructorSerializer
-                where
-                    (singleConstructorSerializer != null && constructorNumber == singleConstructorSerializer.ConstructorNumber) ||
-                        multiConstructorSerializer != null && multiConstructorSerializer.ConstructorNumbers.Contains(constructorNumber)
-                select serializer.SupportedType.FullName).FirstOrDefault();
-        }
+            // Update TLTypesBox.
+            _typesBox.Clear();
+            foreach (TLCombinator combinator in _constructors.Union(_methods))
+            {
+                _typesBox.Add(combinator.Type);
+                foreach (TLCombinatorParameter parameter in combinator.Parameters)
+                {
+                    _typesBox.Add(parameter.Type);
+                }
+            }
 
-        private static bool HasBuiltInSerializer(uint constructorNumber)
-        {
-            return GetBuiltInTypeName(constructorNumber) != null;
-        }
-
-        private void FixTypes()
-        {
+            // Fix types.
             foreach (TLType tlType in _typesBox.GetAll())
             {
                 FixType(tlType);
@@ -139,6 +121,22 @@ namespace SharpTL.Compiler
                     }
                 }
             }
+        }
+
+        private static string GetBuiltInTypeName(uint constructorNumber)
+        {
+            return (from serializer in BuiltIn.BaseTypeSerializers
+                let singleConstructorSerializer = serializer as ITLSingleConstructorSerializer
+                let multiConstructorSerializer = serializer as ITLMultiConstructorSerializer
+                where
+                    (singleConstructorSerializer != null && constructorNumber == singleConstructorSerializer.ConstructorNumber) ||
+                        multiConstructorSerializer != null && multiConstructorSerializer.ConstructorNumbers.Contains(constructorNumber)
+                select serializer.SupportedType.FullName).FirstOrDefault();
+        }
+
+        private static bool HasBuiltInSerializer(uint constructorNumber)
+        {
+            return GetBuiltInTypeName(constructorNumber) != null;
         }
 
         private void FixType(TLType type)

@@ -18,6 +18,7 @@ namespace SharpTL.Compiler
     [DebuggerDisplay("{Text}")]
     public class TLType : IEquatable<TLType>
     {
+        private static readonly List<string> SystemObjectTypeNames = new List<string> { typeof(Object).FullName, typeof(Object).Name, "object" };
         private int _lastHashCode;
         private string _text;
 
@@ -38,6 +39,11 @@ namespace SharpTL.Compiler
         public bool IsVoid
         {
             get { return Name == "void"; }
+        }
+
+        public bool IsSystemObject
+        {
+            get { return SystemObjectTypeNames.Contains(Name); }
         }
 
         public uint? Number
@@ -72,7 +78,10 @@ namespace SharpTL.Compiler
             if (_lastHashCode != currentHashCode)
             {
                 _lastHashCode = currentHashCode;
-                _text = string.Format("{0} 0x{1:X8} (0x{2})", Name, Number,
+                _text = string.Format(
+                    "{0} 0x{1:X8} (0x{2})",
+                    Name,
+                    Number,
                     (Constructors != null && Constructors.Count > 0)
                         ? Constructors.Select(u => u.Number.ToString("X8")).Aggregate((paramsText, paramText) => paramsText + " + 0x" + paramText)
                         : string.Empty);
