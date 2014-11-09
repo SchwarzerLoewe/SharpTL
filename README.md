@@ -109,6 +109,18 @@ There is a special performance measurement tool, named [SerializersRace](https:/
 
 ## Change log
 
+#### SharpTL 0.8
+
+- Added `TLObjectWithCustomSerializerAttribute`.
+- Improved compiler:
+  - Added support for several new built-in types.
+  - Added 'MethodsInterfaceName' arg to the compiler.
+  - Compiler template: type interfaces now 'partial's.
+- Breaking changes:
+  - `TLSerializerBase` now has only one constructor and it accepts `constructorNumber`.
+  - `ITLSingleConstructorSerializer` now has settable `ConstructorNumber` property.
+  - Removed ability to set custom serializer type in `TLObjectAttribute`, use `TLObjectWithCustomSerializerAttribute` instead and to override constructor number from a custom serializer, use the attribute together with `TLObjectAttribute`.
+
 #### SharpTL 0.7.2
 
 - Improved performance of `TLVectorSerializer`.

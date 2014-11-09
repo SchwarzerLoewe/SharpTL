@@ -13,4 +13,4 @@ using System.Resources;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
-[assembly: AssemblyVersion("0.7.2")]
+[assembly: AssemblyVersion("0.8.0")]
