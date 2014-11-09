@@ -63,9 +63,10 @@ namespace SharpTL.Compiler
             get { return _typesBox; }
         }
 
-        public string Compile(string @namespace)
+        public string Compile(string @namespace, string methodsInterfaceName = null)
         {
-            var template = new SharpTLDefaultTemplate(new TemplateVars {Schema = this, Namespace = @namespace});
+            methodsInterfaceName = methodsInterfaceName ?? @namespace.Replace(".", string.Empty);
+            var template = new SharpTLDefaultTemplate(new TemplateVars { Schema = this, Namespace = @namespace, MethodsInterfaceName = methodsInterfaceName });
             return template.TransformText();
         }
 

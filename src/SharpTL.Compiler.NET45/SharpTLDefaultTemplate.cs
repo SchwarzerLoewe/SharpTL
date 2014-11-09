@@ -105,7 +105,14 @@ foreach (TLType type in from t in _templateVars.Schema.TypesBox where t.HasConst
             #line default
             #line hidden
             this.Write("\r\n    /// <summary>\r\n    ///     TL methods.\r\n    /// </summary>\r\n    public inte" +
-                    "rface ITLMethods\r\n    {\r\n");
+                    "rface I");
+            
+            #line 56 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SharpTLDefaultTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(_templateVars.MethodsInterfaceName));
+            
+            #line default
+            #line hidden
+            this.Write("Methods\r\n    {\r\n");
             
             #line 58 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SharpTLDefaultTemplate.tt"
 
@@ -146,7 +153,14 @@ foreach (TLType type in from t in _templateVars.Schema.TypesBox where t.HasConst
             #line default
             #line hidden
             this.Write("    }\r\n\r\n    /// <summary>\r\n    ///     TL async methods.\r\n    /// </summary>\r\n  " +
-                    "  public interface ITLAsyncMethods\r\n    {\r\n");
+                    "  public interface I");
+            
+            #line 71 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SharpTLDefaultTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(_templateVars.MethodsInterfaceName));
+            
+            #line default
+            #line hidden
+            this.Write("AsyncMethods\r\n    {\r\n");
             
             #line 73 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SharpTLDefaultTemplate.tt"
 

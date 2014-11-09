@@ -25,10 +25,10 @@ namespace SharpTL.Compiler
         private static readonly Regex SingleLineCommentRegex = new Regex("//.*$", RegexOptions.Multiline);
         private static readonly Regex MultiLineCommentRegex = new Regex(@"/\*.*?\*/", RegexOptions.Singleline);
 
-        public static string CompileFromTL(string tlSchemaText, string @namespace)
+        public static string CompileFromTL(string tlSchemaText, string @namespace, string methodsInterfaceName = null)
         {
             TLSchema schema = FromTL(tlSchemaText);
-            return schema.Compile(@namespace);
+            return schema.Compile(@namespace, methodsInterfaceName);
         }
 
         /// <summary>

@@ -24,10 +24,10 @@ namespace SharpTL.Compiler
             return new TLSchema(constructors, methods);
         }
 
-        public static string CompileFromJson(string json, string @namespace)
+        public static string CompileFromJson(string json, string @namespace, string methodsInterfaceName = null)
         {
             TLSchema schema = FromJson(json);
-            return schema.Compile(@namespace);
+            return schema.Compile(@namespace, methodsInterfaceName);
         }
 
         private static IEnumerable<TLCombinator> CreateConstructorsFromJsonArrayObjects(JsonArrayObjects objects, TLTypesBox typesBox)

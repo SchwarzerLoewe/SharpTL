@@ -17,7 +17,7 @@ namespace SharpTL.Compiler.CLI
         JSON
     }
 
-    [ArgExample(@"SharpTL.Compiler.CLI compile json C:\schema1.json C:\schema1.cs", "Compile TL-schema described in JSON file."), UsedImplicitly]
+    [ArgExample(@"SharpTL.Compiler.CLI compile json schema1.json schema1.cs SomeSchema SchemaMethods", "Compile TL-schema described in JSON file."), UsedImplicitly]
     public class CompilerArgs
     {
         [ArgRequired]
@@ -34,10 +34,10 @@ namespace SharpTL.Compiler.CLI
             switch (args.SourceType)
             {
                 case SchemaSourceType.TL:
-                    compiled = TLSchema.CompileFromTL(source, args.Namespace);
+                    compiled = TLSchema.CompileFromTL(source, args.Namespace, args.MethodsInterfaceName);
                     break;
                 case SchemaSourceType.JSON:
-                    compiled = TLSchema.CompileFromJson(source, args.Namespace);
+                    compiled = TLSchema.CompileFromJson(source, args.Namespace, args.MethodsInterfaceName);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -69,6 +69,10 @@ namespace SharpTL.Compiler.CLI
         [ArgDescription("Namespace for compiled C# code.")]
         [ArgPosition(4)]
         public string Namespace { get; set; }
+
+        [ArgDescription("Methods interface name.")]
+        [ArgPosition(5)]
+        public string MethodsInterfaceName { get; set; }
     }
 
     internal static class Program

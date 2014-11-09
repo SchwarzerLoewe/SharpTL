@@ -53,7 +53,7 @@ foreach (TLType type in from t in _templateVars.Schema.TypesBox where t.HasConst
     /// <summary>
     ///     TL methods.
     /// </summary>
-    public interface ITLMethods
+    public interface I<#=_templateVars.MethodsInterfaceName#>Methods
     {
 <#
     foreach (TLCombinator method in _templateVars.Schema.Methods)
@@ -68,7 +68,7 @@ foreach (TLType type in from t in _templateVars.Schema.TypesBox where t.HasConst
     /// <summary>
     ///     TL async methods.
     /// </summary>
-    public interface ITLAsyncMethods
+    public interface I<#=_templateVars.MethodsInterfaceName#>AsyncMethods
     {
 <#
     foreach (TLCombinator method in _templateVars.Schema.Methods)
