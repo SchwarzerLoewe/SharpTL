@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -240,7 +241,11 @@ namespace SharpTL
         /// <param name="assembly">Assembly with TL objects.</param>
         public void PrepareSerializersForAllTLObjectsInAssembly(Assembly assembly)
         {
-            foreach (TypeInfo typeInfo in assembly.DefinedTypes.Where(typeInfo => typeInfo.GetCustomAttribute<TLObjectAttribute>() != null))
+            IEnumerable<TypeInfo> typeInfos = from t in assembly.DefinedTypes
+                where t.GetCustomAttribute<TLObjectAttribute>() != null || t.GetCustomAttribute<TLObjectWithCustomSerializerAttribute>() != null
+                select t;
+
+            foreach (TypeInfo typeInfo in typeInfos)
             {
                 _serializersBucket.PrepareSerializer(typeInfo.AsType());
             }
