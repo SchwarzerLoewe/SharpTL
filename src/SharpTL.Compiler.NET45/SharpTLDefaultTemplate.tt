@@ -42,7 +42,7 @@ foreach (TLType type in from t in _templateVars.Schema.TypesBox where t.HasConst
 #>
     [TLType(<#=type.Constructors.Select(constructor => string.Format("typeof({0})", constructor.Name)).Aggregate((s, s1) => s + ", " + s1)
     #>)]
-    public interface <#=type.Name #>
+    public partial interface <#=type.Name #>
     {
     }
 

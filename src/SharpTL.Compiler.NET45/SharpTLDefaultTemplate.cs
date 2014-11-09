@@ -88,7 +88,7 @@ foreach (TLType type in from t in _templateVars.Schema.TypesBox where t.HasConst
             
             #line default
             #line hidden
-            this.Write(")]\r\n    public interface ");
+            this.Write(")]\r\n    public partial interface ");
             
             #line 45 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SharpTLDefaultTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(type.Name));
