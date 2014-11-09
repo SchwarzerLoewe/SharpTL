@@ -165,12 +165,17 @@ namespace SharpTL
 
             // TLObject.
             var tlObjectAttribute = objTypeInfo.GetCustomAttribute<TLObjectAttribute>();
-            if (tlObjectAttribute != null)
+            var customSerializerAttribute = objTypeInfo.GetCustomAttribute<TLObjectWithCustomSerializerAttribute>();
+            if (tlObjectAttribute != null || customSerializerAttribute != null)
             {
                 // Check for custom serializer.
-                if (tlObjectAttribute.CustomSerializerType != null)
+                if (customSerializerAttribute != null)
                 {
-                    var customSerializer = (ITLSingleConstructorSerializer) Activator.CreateInstance(tlObjectAttribute.CustomSerializerType);
+                    var customSerializer = (ITLSingleConstructorSerializer) Activator.CreateInstance(customSerializerAttribute.Type);
+                    if (tlObjectAttribute != null)
+                    {
+                        customSerializer.ConstructorNumber = tlObjectAttribute.ConstructorNumber;
+                    }
                     Add(customSerializer);
                 }
                 else
@@ -180,18 +185,14 @@ namespace SharpTL
                      * then use this meta-info to create properties map for object serialization based on TLProperty attributes. 
                      */
                     List<TLPropertyInfo> props =
-                        objTypeInfo.DeclaredProperties.Zip(objTypeInfo.DeclaredProperties.Select(info => info.GetCustomAttribute<TLPropertyAttribute>()),
+                        objTypeInfo.DeclaredProperties.Zip(
+                            objTypeInfo.DeclaredProperties.Select(info => info.GetCustomAttribute<TLPropertyAttribute>()),
                             (info, attribute) => new Tuple<PropertyInfo, TLPropertyAttribute>(info, attribute))
                             .Where(tuple => tuple.Item2 != null)
                             .Select(tuple => new TLPropertyInfo(tuple.Item2.Order, tuple.Item1, tuple.Item2.SerializationModeOverride))
                             .ToList();
 
-                    Add(new TLCustomObjectSerializer(tlObjectAttribute.ConstructorNumber, objType, props, this, tlObjectAttribute.SerializationMode));
-
-                    foreach (TLPropertyInfo tlPropertyInfo in props)
-                    {
-                        PrepareSerializer(tlPropertyInfo.PropertyInfo.PropertyType);
-                    }
+                    Add(new TLCustomObjectSerializer(tlObjectAttribute.ConstructorNumber, objType, props, this));
                 }
             }
             else

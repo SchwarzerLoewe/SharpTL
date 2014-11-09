@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Int128Serializer.cs">
-//   Copyright (c) 2013 Alexander Logger. All rights reserved.
+//   Copyright (c) 2013-2014 Alexander Logger. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -14,11 +14,11 @@ namespace SharpTL.Serializers
     /// </summary>
     public class Int128Serializer : TLBareTypeSerializerBase
     {
+        public const uint DefaultConstructorNumber = 0x84CCF7B7;
         private static readonly Type _SupportedType = typeof (Int128);
 
-        public override uint ConstructorNumber
+        public Int128Serializer() : base(DefaultConstructorNumber)
         {
-            get { return 0x84CCF7B7; }
         }
 
         public override Type SupportedType
@@ -33,7 +33,7 @@ namespace SharpTL.Serializers
 
         protected override void WriteBody(object obj, TLSerializationContext context)
         {
-            context.Streamer.WriteInt128((Int128)obj);
+            context.Streamer.WriteInt128((Int128) obj);
         }
     }
 }

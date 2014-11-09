@@ -12,6 +12,7 @@ namespace SharpTL.Serializers
 {
     public class TLVectorSerializer<T> : TLBoxedTypeSerializerBase, ITLVectorSerializer
     {
+        public const uint DefaultConstructorNumber = 0x1CB5C415;
         private const TLSerializationMode DefaultItemsSerializationMode = TLSerializationMode.Boxed;
         private static readonly Type ItemsTypeInternal = typeof (T);
         private static readonly Type SupportedTypeInternal = typeof (List<T>);
@@ -23,9 +24,9 @@ namespace SharpTL.Serializers
             IsItemsTypeObject = ItemsTypeInternal == typeof (Object);
         }
 
-        public override uint ConstructorNumber
+        public TLVectorSerializer()
+            : base(DefaultConstructorNumber)
         {
-            get { return 0x1CB5C415; }
         }
 
         public override Type SupportedType

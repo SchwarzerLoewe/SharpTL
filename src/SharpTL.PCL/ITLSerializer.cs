@@ -17,7 +17,7 @@ namespace SharpTL
         /// <summary>
         /// Constructor number.
         /// </summary>
-        uint ConstructorNumber { get; }
+        uint ConstructorNumber { get; set; }
     }
 
     /// <summary>

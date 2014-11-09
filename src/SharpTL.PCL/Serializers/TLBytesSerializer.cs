@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TLBytesSerializer.cs">
-//   Copyright (c) 2013 Alexander Logger. All rights reserved.
+//   Copyright (c) 2013-2014 Alexander Logger. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -10,6 +10,8 @@ namespace SharpTL.Serializers
 {
     public class TLBytesSerializer : TLBareTypeSerializerBase
     {
+        public const uint DefaultDurovConstructorNumber = 0xB5286E24;
+        public const uint DefaultConstructorNumber = 0xEBEFB69E;
         private static readonly Type _SupportedType = typeof (byte[]);
 
         private readonly bool _isDurovMode;
@@ -18,7 +20,7 @@ namespace SharpTL.Serializers
         {
         }
 
-        public TLBytesSerializer(bool isDurovMode)
+        public TLBytesSerializer(bool isDurovMode) : base(isDurovMode ? DefaultDurovConstructorNumber : DefaultConstructorNumber)
         {
             _isDurovMode = isDurovMode;
         }
@@ -26,6 +28,10 @@ namespace SharpTL.Serializers
         /// <summary>
         ///     In Durov mode Bytes is an alias for String type hence both serializers have the same constructor numbers.
         /// </summary>
+        /// <remarks>
+        ///     TL bytes contructor number of normal systems: 0xEBEFB69E,
+        ///     TL bytes constructor number of Durov's systems: 0xB5286E24 (yes, like string).
+        /// </remarks>
         public bool IsDurovMode
         {
             get { return _isDurovMode; }
@@ -34,13 +40,6 @@ namespace SharpTL.Serializers
         public override Type SupportedType
         {
             get { return _SupportedType; }
-        }
-
-        public override uint ConstructorNumber
-        {
-            // string#B5286E24 ? = String;
-            // bytes#EBEFB69E ? = Bytes;
-            get { return _isDurovMode ? 0xB5286E24 : 0xEBEFB69E; }
         }
 
         protected override object ReadBody(TLSerializationContext context)

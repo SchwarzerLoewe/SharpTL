@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="LongSerializer.cs">
-//   Copyright (c) 2013 Alexander Logger. All rights reserved.
+//   Copyright (c) 2013-2014 Alexander Logger. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -10,11 +10,11 @@ namespace SharpTL.Serializers
 {
     public class LongSerializer : TLBareTypeSerializerBase
     {
+        public const uint DefaultConstructorNumber = 0x22076CBAu;
         private static readonly Type _SupportedType = typeof (long);
 
-        public override uint ConstructorNumber
+        public LongSerializer() : base(DefaultConstructorNumber)
         {
-            get { return 0x22076CBAu; }
         }
 
         public override Type SupportedType

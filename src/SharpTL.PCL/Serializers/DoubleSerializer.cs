@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="DoubleSerializer.cs">
-//   Copyright (c) 2013 Alexander Logger. All rights reserved.
+//   Copyright (c) 2013-2014 Alexander Logger. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -10,11 +10,11 @@ namespace SharpTL.Serializers
 {
     public class DoubleSerializer : TLBareTypeSerializerBase
     {
+        public const uint DefaultConstructorNumber = 0x2210C154u;
         private static readonly Type _SupportedType = typeof (double);
 
-        public override uint ConstructorNumber
+        public DoubleSerializer() : base(DefaultConstructorNumber)
         {
-            get { return 0x2210C154u; }
         }
 
         public override Type SupportedType

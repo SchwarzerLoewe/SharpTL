@@ -18,8 +18,6 @@ namespace SharpTL.Serializers
     /// </summary>
     public class TLCustomObjectSerializer : TLSerializerBase
     {
-        private readonly uint _constructorNumber;
-
         private readonly Type _objectType;
 
         private readonly ITLPropertySerializationAgent[] _serializationAgents;
@@ -30,16 +28,11 @@ namespace SharpTL.Serializers
             IEnumerable<TLPropertyInfo> properties,
             TLSerializersBucket serializersBucket,
             TLSerializationMode serializationMode = TLSerializationMode.Boxed)
+            : base(constructorNumber)
         {
-            _constructorNumber = constructorNumber;
             _objectType = objectType;
             _serializationAgents = CreateSerializationAgents(properties, serializersBucket);
             SerializationMode = serializationMode;
-        }
-
-        public override uint ConstructorNumber
-        {
-            get { return _constructorNumber; }
         }
 
         public override Type SupportedType

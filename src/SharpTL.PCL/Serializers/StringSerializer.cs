@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="StringSerializer.cs">
-//   Copyright (c) 2013 Alexander Logger. All rights reserved.
+//   Copyright (c) 2013-2014 Alexander Logger. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -11,16 +11,16 @@ namespace SharpTL.Serializers
 {
     public class StringSerializer : TLBareTypeSerializerBase
     {
+        public const uint DefaultConstructorNumber = 0xB5286E24;
         private static readonly Type _SupportedType = typeof (string);
+
+        public StringSerializer() : base(DefaultConstructorNumber)
+        {
+        }
 
         public override Type SupportedType
         {
             get { return _SupportedType; }
-        }
-
-        public override uint ConstructorNumber
-        {
-            get { return 0xB5286E24; }
         }
 
         private static Encoding Encoding

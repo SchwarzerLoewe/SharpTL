@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Int256Serializer.cs">
-//   Copyright (c) 2013 Alexander Logger. All rights reserved.
+//   Copyright (c) 2013-2014 Alexander Logger. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -14,11 +14,11 @@ namespace SharpTL.Serializers
     /// </summary>
     public class Int256Serializer : TLBareTypeSerializerBase
     {
+        public const uint DefaultConstructorNumber = 0x7BEDEB5B;
         private static readonly Type _SupportedType = typeof (Int256);
 
-        public override uint ConstructorNumber
+        public Int256Serializer() : base(DefaultConstructorNumber)
         {
-            get { return 0x7BEDEB5B; }
         }
 
         public override Type SupportedType
@@ -33,7 +33,7 @@ namespace SharpTL.Serializers
 
         protected override void WriteBody(object obj, TLSerializationContext context)
         {
-            context.Streamer.WriteInt256((Int256)obj);
+            context.Streamer.WriteInt256((Int256) obj);
         }
     }
 }

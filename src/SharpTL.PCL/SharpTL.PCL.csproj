@@ -54,6 +54,7 @@
     <Compile Include="ITLVectorSerializer.cs" />
     <Compile Include="Serializers\TLBytesSerializer.cs" />
     <Compile Include="Serializers\TLSerializer.cs" />
+    <Compile Include="TLObjectWithCustomSerializerAttribute.cs" />
     <Compile Include="TLSerializationContext.cs" />
     <Compile Include="Serializers\BooleanSerializer.cs" />
     <Compile Include="Serializers\DoubleSerializer.cs" />

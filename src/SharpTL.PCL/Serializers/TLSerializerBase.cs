@@ -14,12 +14,17 @@ namespace SharpTL.Serializers
     /// </summary>
     public abstract class TLSerializerBase : ITLSingleConstructorSerializer
     {
+        protected TLSerializerBase(uint constructorNumber)
+        {
+            ConstructorNumber = constructorNumber;
+        }
+
         /// <summary>
         ///     Serialization mode.
         /// </summary>
         public TLSerializationMode SerializationMode { get; protected set; }
 
-        public abstract uint ConstructorNumber { get; }
+        public uint ConstructorNumber { get; set; }
 
         public abstract Type SupportedType { get; }
 
@@ -105,7 +110,7 @@ namespace SharpTL.Serializers
     /// </summary>
     public abstract class TLBareTypeSerializerBase : TLSerializerBase
     {
-        protected TLBareTypeSerializerBase()
+        protected TLBareTypeSerializerBase(uint constructorNumber) : base(constructorNumber)
         {
             SerializationMode = TLSerializationMode.Bare;
         }
@@ -116,7 +121,7 @@ namespace SharpTL.Serializers
     /// </summary>
     public abstract class TLBoxedTypeSerializerBase : TLSerializerBase
     {
-        protected TLBoxedTypeSerializerBase()
+        protected TLBoxedTypeSerializerBase(uint constructorNumber) : base(constructorNumber)
         {
             SerializationMode = TLSerializationMode.Boxed;
         }

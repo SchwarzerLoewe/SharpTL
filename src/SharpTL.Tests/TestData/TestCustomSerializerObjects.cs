@@ -9,7 +9,7 @@ using SharpTL.Serializers;
 
 namespace SharpTL.Tests.TestData
 {
-    [TLObject(typeof (TestCustomSerializer))]
+    [TLObjectWithCustomSerializer(typeof (TestCustomSerializer))]
     public class TestCustomSerializerObject : IEquatable<TestCustomSerializerObject>
     {
         public TestCustomSerializerObject()
@@ -83,9 +83,10 @@ namespace SharpTL.Tests.TestData
 
     public class TestCustomSerializer : TLSerializer<TestCustomSerializerObject>
     {
-        public override uint ConstructorNumber
+        public const uint DefaultConstructorNumber = 0xF4FD58C6;
+
+        public TestCustomSerializer() : base(DefaultConstructorNumber)
         {
-            get { return 0xF4FD58C6; }
         }
 
         protected override TestCustomSerializerObject ReadTypedBody(TLSerializationContext context)

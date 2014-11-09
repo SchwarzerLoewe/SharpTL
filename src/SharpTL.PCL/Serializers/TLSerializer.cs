@@ -15,6 +15,10 @@ namespace SharpTL.Serializers
     public abstract class TLSerializer<T> : TLSerializerBase
     {
         private static readonly Type ObjType = typeof (T);
+        
+        protected TLSerializer(uint constructorNumber) : base(constructorNumber)
+        {
+        }
 
         public override Type SupportedType
         {
