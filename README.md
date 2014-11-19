@@ -91,8 +91,11 @@ It is possible to automatically convert a TL-schema (json/tl) to C# object model
 
 Usage example:
 ```powershell
-SharpTL.Compiler.CLI.exe compile json MTProto.json MTProto.cs MTProtoSchema
+SharpTL.Compiler.CLI.exe compile -t json -s telegram.json -ns SharpTelegram.Schema -mn Telegram -impl
 ```
+This command produces 2 files:
+- `SharpTelegram.Schema.cs` schema types and methods interfaces.
+- `SharpTelegram.Schema.MethodsImpl.cs` methods implementation (generated only with `-impl` arg).
 
 ## Performance
 There is a special performance measurement tool, named [SerializersRace](https://github.com/inTagger/SerializersRace).
@@ -101,11 +104,11 @@ There is a special performance measurement tool, named [SerializersRace](https:/
 
 | Serializer        | Version   | Bytes |  Prep. | Warmup |  Elapsed |  Rate |
 |:------------------|:----------|------:|-------:|-------:|---------:|------:|
-| [protobuf-net][1] | 2.0.0.668 |    60 | 146 ms |  14 ms |  5440 ms | x1,00 |
-| [SharpTL][2]      | 0.7.2     |    88 |  21 ms |  51 ms | 13547 ms | x2,49 |
+| [protobuf-net]    | 2.0.0.668 |    60 | 146 ms |  14 ms |  5440 ms | x1,00 |
+| [SharpTL]         | 0.7.2     |    88 |  21 ms |  51 ms | 13547 ms | x2,49 |
 
-  [1]: https://github.com/mgravell/protobuf-net
-  [2]: https://github.com/Taggersoft/SharpTL
+  [protobuf-net]: https://github.com/mgravell/protobuf-net
+  [SharpTL]: https://github.com/Taggersoft/SharpTL
 
 ## Change log
 
