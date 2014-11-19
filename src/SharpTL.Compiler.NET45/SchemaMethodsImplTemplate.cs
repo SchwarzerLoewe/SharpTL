@@ -54,57 +54,17 @@ namespace ");
             
             #line default
             #line hidden
-            this.Write(@"
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
-    [Flags]
-    public enum MessageSendingFlags
-    {
-        None = 0,
-        Encrypted = 1,
-        ContentRelated = 1 << 1,
-        EncryptedAndContentRelated = Encrypted | ContentRelated
-    }
-
-    /// <summary>
-    ///     Interface for remote procedure calls.
-    /// </summary>
-    public interface IRemoteProcedureCaller
-    {
-        /// <summary>
-        ///     Sends query without waiting for any result.
-        /// </summary>
-        /// <param name=""requestBody"">Request body.</param>
-        Task SendAsync(object requestBody);
-
-        /// <summary>
-        ///     Sends RPC and wait for result response asynchronously.
-        /// </summary>
-        /// <typeparam name=""TResponse"">Type of a result response.</typeparam>
-        /// <param name=""requestBody"">Request body.</param>
-        /// <returns>Response.</returns>
-        Task<TResponse> RpcAsync<TResponse>(object requestBody);
-
-        /// <summary>
-        ///     Sets flags for message sendings.
-        /// </summary>
-        /// <param name=""flags"">Dictionary: (Type of request body)-(message sending flags).</param>
-        void SetMessageSendingFlags(Dictionary<Type, MessageSendingFlags> flags);
-    }
-
-    public partial class ");
+            this.Write("\r\n{\r\n    using System.Threading.Tasks;\r\n    using IRemoteProcedureCaller = SharpM" +
+                    "TProto.IRemoteProcedureCaller;\r\n\r\n    public partial class ");
             
-            #line 60 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
+            #line 24 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_templateVars.MethodsInterfaceName));
             
             #line default
             #line hidden
             this.Write("AsyncMethods : I");
             
-            #line 60 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
+            #line 24 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_templateVars.MethodsInterfaceName));
             
             #line default
@@ -112,7 +72,7 @@ namespace ");
             this.Write("AsyncMethods\r\n    {\r\n        private readonly IRemoteProcedureCaller _remoteProce" +
                     "dureCaller;\r\n\r\n        public ");
             
-            #line 64 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
+            #line 28 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_templateVars.MethodsInterfaceName));
             
             #line default
@@ -127,7 +87,7 @@ namespace ");
 
 ");
             
-            #line 72 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
+            #line 36 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
 
     foreach (TLCombinator method in _templateVars.Schema.Methods)
     {
@@ -138,35 +98,35 @@ namespace ");
             #line hidden
             this.Write("        public ");
             
-            #line 77 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
+            #line 41 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(returnType));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 77 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
+            #line 41 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name));
             
             #line default
             #line hidden
             this.Write("Async(");
             
-            #line 77 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
+            #line 41 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name));
             
             #line default
             #line hidden
             this.Write("Args args)\r\n        {\r\n            ");
             
-            #line 79 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
+            #line 43 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Type.IsVoid ? "return _remoteProcedureCaller.SendAsync(args);" : String.Format("return _remoteProcedureCaller.RpcAsync<{0}>(args);", method.Type.Name)));
             
             #line default
             #line hidden
             this.Write("\r\n        }\r\n\r\n");
             
-            #line 82 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
+            #line 46 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
 
     }
 
@@ -177,7 +137,7 @@ namespace ");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 88 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
+        #line 52 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SchemaMethodsImplTemplate.tt"
 [UsedImplicitly] private TemplateVars _templateVars;
         
         #line default
