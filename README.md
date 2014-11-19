@@ -95,7 +95,7 @@ SharpTL.Compiler.CLI.exe compile -t json -s telegram.json -ns SharpTelegram.Sche
 ```
 This command produces 2 files:
 - `SharpTelegram.Schema.cs` schema types and methods interfaces.
-- `SharpTelegram.Schema.MethodsImpl.cs` methods implementation (generated only with `-impl` arg).
+- `SharpTelegram.Schema.MethodsImpl.cs` schema methods implementation (generated only with `-impl` arg). In order to compile this file, [SharpMTProto] library must be referenced.
 
 ## Performance
 There is a special performance measurement tool, named [SerializersRace](https://github.com/inTagger/SerializersRace).
@@ -107,8 +107,6 @@ There is a special performance measurement tool, named [SerializersRace](https:/
 | [protobuf-net]    | 2.0.0.668 |    60 | 146 ms |  14 ms |  5440 ms | x1,00 |
 | [SharpTL]         | 0.7.2     |    88 |  21 ms |  51 ms | 13547 ms | x2,49 |
 
-  [protobuf-net]: https://github.com/mgravell/protobuf-net
-  [SharpTL]: https://github.com/Taggersoft/SharpTL
 
 ## Change log
 
@@ -179,3 +177,8 @@ There is a special performance measurement tool, named [SerializersRace](https:/
 #### SharpTL 0.1
 
 - Implemented serializers for base TL types and custom objects.
+
+
+[protobuf-net]: https://github.com/mgravell/protobuf-net
+[SharpTL]: https://github.com/Taggersoft/SharpTL
+[SharpMTProto]: https://github.com/Taggersoft/SharpMTProto
