@@ -56,8 +56,8 @@ namespace ");
             
             #line default
             #line hidden
-            this.Write("\r\n{\r\n    using SharpTL;\r\n    using System.Threading.Tasks;\r\n    \r\n    // TL const" +
-                    "ructors.\r\n\r\n");
+            this.Write("\r\n{\r\n    using SharpTL;\r\n    using System.Threading.Tasks;\r\n\r\n    // TL construct" +
+                    "ors.\r\n\r\n");
             
             #line 27 "E:\Projects\SharpTL\src\SharpTL.Compiler.NET45\SharpTLDefaultTemplate.tt"
 
