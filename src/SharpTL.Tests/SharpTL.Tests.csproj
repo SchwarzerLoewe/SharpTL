@@ -46,9 +46,6 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -58,10 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StringUtilsFacts.cs" />
     <Compile Include="TestData\TestCustomSerializerObjects.cs" />
     <Compile Include="TLSerializersBucketFacts.cs" />
-    <Compile Include="TLShemaCompilerFacts.cs" />
     <Compile Include="TLStreamerFacts.cs" />
     <Compile Include="TestData\TestCases.cs" />
     <Compile Include="TestData\TestObjects.cs" />
@@ -70,21 +65,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="TL-schemas\mtproto.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TL-schemas\Test.tl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TL-schemas\TestTLSchema.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpTL.Compiler.NET45\SharpTL.Compiler.NET45.csproj">
-      <Project>{a02ea59b-e026-437d-8ed9-ad76aca58db6}</Project>
-      <Name>SharpTL.Compiler.NET45</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharpTL.PCL\SharpTL.PCL.csproj">
       <Project>{4172ee09-143e-425f-ab10-99db1d41a645}</Project>
       <Name>SharpTL.PCL</Name>

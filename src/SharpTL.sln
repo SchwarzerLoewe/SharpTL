@@ -1,19 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpTL.PCL", "SharpTL.PCL\SharpTL.PCL.csproj", "{4172EE09-143E-425F-AB10-99DB1D41A645}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpTL.Tests", "SharpTL.Tests\SharpTL.Tests.csproj", "{52260990-3D7F-4A51-98B9-E8FD08FCE890}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpTL.Compiler.NET45", "SharpTL.Compiler.NET45\SharpTL.Compiler.NET45.csproj", "{A02EA59B-E026-437D-8ED9-AD76ACA58DB6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpTL.Compiler.CLI.NET45", "SharpTL.Compiler.CLI.NET45\SharpTL.Compiler.CLI.NET45.csproj", "{52C2FC3F-AA5B-47C8-9243-288983D309CC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B33AEE24-E951-4F31-8CAE-7EA4E1C39B75}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compiler", "Compiler", "{90768C9B-B6C5-4F47-BF2A-7771EB74B467}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{42DAAEDD-64DF-43D2-9F7B-3D475F878745}"
 	ProjectSection(SolutionItems) = preProject
@@ -36,21 +30,11 @@ Global
 		{52260990-3D7F-4A51-98B9-E8FD08FCE890}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52260990-3D7F-4A51-98B9-E8FD08FCE890}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52260990-3D7F-4A51-98B9-E8FD08FCE890}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A02EA59B-E026-437D-8ED9-AD76ACA58DB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A02EA59B-E026-437D-8ED9-AD76ACA58DB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A02EA59B-E026-437D-8ED9-AD76ACA58DB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A02EA59B-E026-437D-8ED9-AD76ACA58DB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{52C2FC3F-AA5B-47C8-9243-288983D309CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52C2FC3F-AA5B-47C8-9243-288983D309CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52C2FC3F-AA5B-47C8-9243-288983D309CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52C2FC3F-AA5B-47C8-9243-288983D309CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{52260990-3D7F-4A51-98B9-E8FD08FCE890} = {B33AEE24-E951-4F31-8CAE-7EA4E1C39B75}
-		{A02EA59B-E026-437D-8ED9-AD76ACA58DB6} = {90768C9B-B6C5-4F47-BF2A-7771EB74B467}
-		{52C2FC3F-AA5B-47C8-9243-288983D309CC} = {90768C9B-B6C5-4F47-BF2A-7771EB74B467}
 	EndGlobalSection
 EndGlobal
