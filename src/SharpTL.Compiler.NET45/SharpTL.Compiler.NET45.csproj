@@ -52,19 +52,26 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CompilationParams.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SchemaMethodsImplTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SchemaMethodsImplTemplate.tt</DependentUpon>
+    </Compile>
     <Compile Include="SharpTLDefaultTemplate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SharpTLDefaultTemplate.tt</DependentUpon>
     </Compile>
-    <Compile Include="SharpTLDefaultTemplateCode.cs" />
+    <Compile Include="TemplatesParts.cs" />
     <Compile Include="TemplateVars.cs" />
     <Compile Include="TLCombinator.cs" />
     <Compile Include="TLCombinatorParameter.cs" />
     <Compile Include="TLSchema.cs" />
     <Compile Include="TLSchema.Json.cs" />
+    <Compile Include="TLSchemaSourceType.cs" />
     <Compile Include="TLType.cs" />
     <Compile Include="TLTypesBox.cs" />
     <Compile Include="Utils\StringUtils.cs" />
@@ -78,6 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="SchemaMethodsImplTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>SchemaMethodsImplTemplate.cs</LastGenOutput>
+    </None>
     <None Include="SharpTLDefaultTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>SharpTLDefaultTemplate.cs</LastGenOutput>

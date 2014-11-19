@@ -12,11 +12,11 @@ namespace SharpTL.Compiler
 {
     public partial class TLSchema
     {
-        public static TLSchema FromJson(string json)
+        public static TLSchema FromJson(string schemaText)
         {
             var typesBox = new TLTypesBox();
 
-            JsonObject tlSchemaJsonObject = JsonObject.Parse(json);
+            JsonObject tlSchemaJsonObject = JsonObject.Parse(schemaText);
 
             IEnumerable<TLCombinator> constructors = CreateConstructorsFromJsonArrayObjects(tlSchemaJsonObject.ArrayObjects("constructors"), typesBox);
             IEnumerable<TLCombinator> methods = CreateMethodsFromJsonArrayObjects(tlSchemaJsonObject.ArrayObjects("methods"), typesBox);
@@ -24,10 +24,10 @@ namespace SharpTL.Compiler
             return new TLSchema(constructors, methods);
         }
 
-        public static string CompileFromJson(string json, string @namespace, string methodsInterfaceName = null)
+        public static string CompileFromJson(string json, CompilationParams compilationParams)
         {
             TLSchema schema = FromJson(json);
-            return schema.Compile(@namespace, methodsInterfaceName);
+            return schema.Compile(compilationParams);
         }
 
         private static IEnumerable<TLCombinator> CreateConstructorsFromJsonArrayObjects(JsonArrayObjects objects, TLTypesBox typesBox)

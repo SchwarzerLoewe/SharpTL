@@ -25,18 +25,18 @@ namespace SharpTL.Compiler
         private static readonly Regex SingleLineCommentRegex = new Regex("//.*$", RegexOptions.Multiline);
         private static readonly Regex MultiLineCommentRegex = new Regex(@"/\*.*?\*/", RegexOptions.Singleline);
 
-        public static string CompileFromTL(string tlSchemaText, string @namespace, string methodsInterfaceName = null)
+        public static string CompileFromTL(string tlSchemaText, CompilationParams compilationParams)
         {
             TLSchema schema = FromTL(tlSchemaText);
-            return schema.Compile(@namespace, methodsInterfaceName);
+            return schema.Compile(compilationParams);
         }
 
         /// <summary>
         ///     Compile TL-schema to C# object model.
         /// </summary>
-        /// <param name="tlSchemaText">TL-schema.</param>
+        /// <param name="schemaText">TL-schema.</param>
         /// <returns>Compiled TL-schema.</returns>
-        public static TLSchema FromTL(string tlSchemaText)
+        public static TLSchema FromTL(string schemaText)
         {
             // TODO: implement.
             throw new NotImplementedException();
@@ -46,10 +46,10 @@ namespace SharpTL.Compiler
             IEnumerable<TLCombinator> constructors = new List<TLCombinator>();
             IEnumerable<TLCombinator> methods = new List<TLCombinator>();
 
-            tlSchemaText = RemoveComments(tlSchemaText);
-            tlSchemaText = RemoveNewlines(tlSchemaText);
+            schemaText = RemoveComments(schemaText);
+            schemaText = RemoveNewlines(schemaText);
 
-            Match partsMatch = TLSchemaPartsRegex.Match(tlSchemaText);
+            Match partsMatch = TLSchemaPartsRegex.Match(schemaText);
             if (!partsMatch.Success)
             {
                 throw new InvalidTLSchemaException();

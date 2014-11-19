@@ -28,7 +28,7 @@ namespace SharpTL.Tests
         [Test]
         public void Should_compile_TL_schema()
         {
-            string sharpTLSchemaCode = TLSchema.CompileFromJson(GetTestTLJsonSchema(), "SharpTL.TestNamespace");
+            string sharpTLSchemaCode = TLSchema.CompileFromJson(GetTestTLJsonSchema(), new CompilationParams("SharpTL.TestNamespace"));
             sharpTLSchemaCode.Should().NotBeNullOrEmpty();
         }
     }

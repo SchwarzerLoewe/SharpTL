@@ -11,12 +11,6 @@ using SharpTL.Compiler.Annotations;
 
 namespace SharpTL.Compiler.CLI
 {
-    public enum SchemaSourceType
-    {
-        TL,
-        JSON
-    }
-
     [ArgExample(@"SharpTL.Compiler.CLI compile json schema1.json schema1.cs SomeSchema SchemaMethods", "Compile TL-schema described in JSON file."), UsedImplicitly]
     public class CompilerArgs
     {
@@ -30,19 +24,22 @@ namespace SharpTL.Compiler.CLI
         {
             Console.WriteLine("Compiling...");
             string source = File.ReadAllText(args.Source);
-            string compiled;
-            switch (args.SourceType)
+            string outputSchemaFileName = string.Format("{0}.cs", args.Namespace);
+            string outputSchemaMethodsImplFileName = string.Format("{0}.MethodsImpl.cs", args.Namespace);
+
+            var compilationParams = new CompilationParams(args.Namespace, args.MethodsInterfaceName);
+            
+            TLSchema schema = TLSchema.Build(args.SourceType, source);
+            
+            string compiledSchema = schema.Compile(compilationParams);
+            File.WriteAllText(outputSchemaFileName, compiledSchema);
+
+            if (args.IncludeMethodsImplementation)
             {
-                case SchemaSourceType.TL:
-                    compiled = TLSchema.CompileFromTL(source, args.Namespace, args.MethodsInterfaceName);
-                    break;
-                case SchemaSourceType.JSON:
-                    compiled = TLSchema.CompileFromJson(source, args.Namespace, args.MethodsInterfaceName);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                string compiledSchemaMethodsImpl = schema.CompileMethodsImpl(compilationParams);
+                File.WriteAllText(outputSchemaMethodsImplFileName, compiledSchemaMethodsImpl);
             }
-            File.WriteAllText(args.Destination, compiled);
+
             Console.WriteLine("Compilation done successfully.");
         }
     }
@@ -50,29 +47,30 @@ namespace SharpTL.Compiler.CLI
     [UsedImplicitly]
     public class CompileArgs
     {
+        [ArgShortcut("t")]
         [ArgRequired]
         [ArgDescription("The type of the TL schema.")]
-        [ArgPosition(1)]
-        public SchemaSourceType SourceType { get; set; }
+        public TLSchemaSourceType SourceType { get; set; }
 
+        [ArgShortcut("s")]
         [ArgRequired]
         [ArgDescription("The path to schema file.")]
-        [ArgPosition(2)]
+        [ArgExistingFile]
         public string Source { get; set; }
 
-        [ArgRequired]
-        [ArgDescription("The path to a file where to drop a compiled schema.")]
-        [ArgPosition(3)]
-        public string Destination { get; set; }
-
-        [ArgRequired]
+        [ArgRequired(PromptIfMissing=true)]
+        [ArgShortcut("ns")]
+        [DefaultValue("TLSchema")]
         [ArgDescription("Namespace for compiled C# code.")]
-        [ArgPosition(4)]
         public string Namespace { get; set; }
 
+        [ArgShortcut("mn")]
         [ArgDescription("Methods interface name.")]
-        [ArgPosition(5)]
         public string MethodsInterfaceName { get; set; }
+
+        [ArgShortcut("impl")]
+        [ArgDescription("Generate file with schema methods implementation.")]
+        public bool IncludeMethodsImplementation { get; set; }
     }
 
     internal static class Program

@@ -1,16 +1,14 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SharpTLDefaultTemplateCode.cs">
-//   Copyright (c) 2013 Alexander Logger. All rights reserved.
+// <copyright file="TLSchemaSourceType.cs">
+//   Copyright (c) 2013-2014 Alexander Logger. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace SharpTL.Compiler
 {
-    public partial class SharpTLDefaultTemplate
+    public enum TLSchemaSourceType
     {
-        public SharpTLDefaultTemplate(TemplateVars templateVars)
-        {
-            _templateVars = templateVars;
-        }
+        TL,
+        JSON
     }
 }

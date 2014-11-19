@@ -44,8 +44,6 @@ namespace SharpTL.Compiler
             _methods = new List<TLCombinator>(methods);
 
             UpdateTypes();
-//            InitTLTypesBox();
-//            FixTypes();
         }
 
         public ReadOnlyCollection<TLCombinator> Constructors
@@ -63,10 +61,53 @@ namespace SharpTL.Compiler
             get { return _typesBox; }
         }
 
-        public string Compile(string @namespace, string methodsInterfaceName = null)
+        public static TLSchema Build(TLSchemaSourceType sourceType, string schemaText)
         {
-            methodsInterfaceName = methodsInterfaceName ?? @namespace.Replace(".", string.Empty);
-            var template = new SharpTLDefaultTemplate(new TemplateVars { Schema = this, Namespace = @namespace, MethodsInterfaceName = methodsInterfaceName });
+            switch (sourceType)
+            {
+                case TLSchemaSourceType.TL:
+                    return FromTL(schemaText);
+                case TLSchemaSourceType.JSON:
+                    return FromJson(schemaText);
+                default:
+                    throw new ArgumentOutOfRangeException("sourceType");
+            }
+        }
+
+        public static string Compile(TLSchemaSourceType sourceType, string schemaText, CompilationParams compilationParams)
+        {
+            switch (sourceType)
+            {
+                case TLSchemaSourceType.TL:
+                    return CompileFromTL(schemaText, compilationParams);
+                case TLSchemaSourceType.JSON:
+                    return CompileFromJson(schemaText, compilationParams);
+                default:
+                    throw new ArgumentOutOfRangeException("sourceType");
+            }
+        }
+
+        public string Compile(CompilationParams compilationParams)
+        {
+            var template =
+                new SharpTLDefaultTemplate(new TemplateVars
+                {
+                    Schema = this,
+                    Namespace = compilationParams.Namespace,
+                    MethodsInterfaceName = compilationParams.MethodsInterfaceName
+                });
+            return template.TransformText();
+        }
+
+        public string CompileMethodsImpl(CompilationParams compilationParams)
+        {
+            var template =
+                new SchemaMethodsImplTemplate(new TemplateVars
+                {
+                    Schema = this,
+                    Namespace = compilationParams.Namespace,
+                    MethodsInterfaceName = compilationParams.MethodsInterfaceName
+                });
             return template.TransformText();
         }
 

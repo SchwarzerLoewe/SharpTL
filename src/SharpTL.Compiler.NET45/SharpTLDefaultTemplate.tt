@@ -1,6 +1,5 @@
 ﻿<#@ template language="C#" #>
-<#@ assembly name="System.Core" #>
-<#@ import namespace="SharpTL.Compiler.Annotations" #>
+<#@ import namespace="Annotations" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
 // ------------------------------------------------------------------------------
