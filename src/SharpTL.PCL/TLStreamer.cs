@@ -264,7 +264,8 @@ namespace SharpTL
         /// </summary>
         public override void WriteByte(byte value)
         {
-            _stream.WriteByte(value);
+            _buffer[0] = value;
+            Write(_buffer, 0, 1);
         }
 
         /// <summary>
@@ -282,7 +283,7 @@ namespace SharpTL
         public virtual void WriteInt32(int value)
         {
             value.ToBytes(_buffer, 0, _streamAsLittleEndianInternal);
-            _stream.Write(_buffer, 0, 4);
+            Write(_buffer, 0, 4);
         }
 
         /// <summary>
@@ -316,7 +317,7 @@ namespace SharpTL
         public virtual void WriteInt64(long value)
         {
             value.ToBytes(_buffer, 0, _streamAsLittleEndianInternal);
-            _stream.Write(_buffer, 0, 8);
+            Write(_buffer, 0, 8);
         }
 
         /// <summary>
