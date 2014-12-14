@@ -127,7 +127,7 @@ namespace SharpTL.Tests
             using (var stream = new TLStreamer(streamBuffer) {StreamAsLittleEndian = streamAsLittleEndian})
             {
                 T value = read(stream);
-                value.ShouldBeEquivalentTo(testValue);
+                value.Should().Be(testValue);
             }
         }
 
