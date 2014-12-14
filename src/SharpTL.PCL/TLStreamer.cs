@@ -55,6 +55,26 @@ namespace SharpTL
         /// <summary>
         ///     Initializes a new instance of the <see cref="TLStreamer" /> class.
         /// </summary>
+        /// <param name="bytes">Bytes.</param>
+        /// <param name="offset">Offset.</param>
+        /// <param name="count">Length from offset.</param>
+        public TLStreamer(byte[] bytes, int offset, int count)
+            : this(new MemoryStream(bytes, offset, count))
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TLStreamer" /> class.
+        /// </summary>
+        /// <param name="bytes">Bytes as array segment.</param>
+        public TLStreamer(ArraySegment<byte> bytes)
+            : this(new MemoryStream(bytes.Array, bytes.Offset, bytes.Count))
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TLStreamer" /> class.
+        /// </summary>
         /// <param name="stream">Stream.</param>
         /// <param name="leaveOpen">Leave underlying stream open.</param>
         public TLStreamer([NotNull] Stream stream, bool leaveOpen = false)
