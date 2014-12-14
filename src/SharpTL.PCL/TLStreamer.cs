@@ -487,17 +487,23 @@ namespace SharpTL
         /// <summary>
         ///     Push current position to a stack.
         /// </summary>
-        public void PushPosition()
+        /// <returns>Current position.</returns>
+        public long PushPosition()
         {
-            _positionStack.Push(Position);
+            var position = Position;
+            _positionStack.Push(position);
+            return position;
         }
 
         /// <summary>
         ///     Pop current position from a stack.
         /// </summary>
-        public void PopPosition()
+        /// <returns>Current position.</returns>
+        public long PopPosition()
         {
-            Position = _positionStack.Pop();
+            var position = _positionStack.Pop();
+            Position = position;
+            return position;
         }
 
         /// <summary>
