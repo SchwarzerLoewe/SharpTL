@@ -83,13 +83,24 @@ namespace SharpTL
         ///     Serializer an object.
         /// </summary>
         /// <param name="obj">The object to be serialized.</param>
+        /// <param name="streamer">TL streamer for writing.</param>
+        /// <param name="modeOverride">Serialization mode override.</param>
+        public void Serialize(object obj, TLStreamer streamer, TLSerializationMode? modeOverride = null)
+        {
+            Serialize(obj, new TLSerializationContext(this, streamer), modeOverride);
+        }
+
+        /// <summary>
+        ///     Serializer an object.
+        /// </summary>
+        /// <param name="obj">The object to be serialized.</param>
         /// <param name="stream">Stream for writing.</param>
         /// <param name="modeOverride">Serialization mode override.</param>
         public void Serialize(object obj, Stream stream, TLSerializationMode? modeOverride = null)
         {
             using (var streamer = new TLStreamer(stream, true))
             {
-                Serialize(obj, new TLSerializationContext(this, streamer), modeOverride);
+                Serialize(obj, streamer, modeOverride);
             }
         }
 
