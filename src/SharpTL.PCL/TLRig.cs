@@ -128,9 +128,12 @@ namespace SharpTL
         /// <param name="obj">The object to be serialized.</param>
         /// <param name="streamer">TL streamer for writing.</param>
         /// <param name="modeOverride">Serialization mode override.</param>
-        public void Serialize(object obj, TLStreamer streamer, TLSerializationMode? modeOverride = null)
+        /// <returns>Bytes written to the stream.</returns>
+        public long Serialize(object obj, TLStreamer streamer, TLSerializationMode? modeOverride = null)
         {
+            long initialPosition = streamer.Position;
             Serialize(obj, new TLSerializationContext(this, streamer), modeOverride);
+            return streamer.Position - initialPosition;
         }
 
         /// <summary>
@@ -139,11 +142,12 @@ namespace SharpTL
         /// <param name="obj">The object to be serialized.</param>
         /// <param name="stream">Stream for writing.</param>
         /// <param name="modeOverride">Serialization mode override.</param>
-        public void Serialize(object obj, Stream stream, TLSerializationMode? modeOverride = null)
+        /// <returns>Bytes written to the stream.</returns>
+        public long Serialize(object obj, Stream stream, TLSerializationMode? modeOverride = null)
         {
             using (var streamer = new TLStreamer(stream, true))
             {
-                Serialize(obj, streamer, modeOverride);
+                return Serialize(obj, streamer, modeOverride);
             }
         }
 
