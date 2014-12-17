@@ -36,6 +36,6 @@
     <file src="SharpTL.PCL\bin\$config$\SharpTL.dll" target="lib\portable-net45+wp8+win8\" />
     <file src="SharpTL.PCL\bin\$config$\SharpTL.pdb" target="lib\portable-net45+wp8+win8\" />
     <file src="SharpTL.PCL\bin\$config$\SharpTL.XML" target="lib\portable-net45+wp8+win8\" />
-    <file src="SharpTL.PCL\**\*.cs" target="src\SharpTL.PCL\" exclude="SharpTL.PCL\obj\**" />
+    <file src="SharpTL.PCL\**\*.cs" target="src\SharpTL.PCL\" />
   </files>
 </package>
