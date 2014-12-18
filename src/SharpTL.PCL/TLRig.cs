@@ -4,25 +4,31 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-
 namespace SharpTL
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+
     /// <summary>
     ///     Type Language tooling equipment.
     /// </summary>
     public class TLRig
     {
+        #region Fields
+
         /// <summary>
         ///     Default instance of the <see cref="TLRig" /> class.
         /// </summary>
         public static readonly TLRig Default = new TLRig();
 
         private readonly TLSerializersBucket _serializersBucket;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TLRig" /> class.
@@ -34,7 +40,10 @@ namespace SharpTL
         /// <summary>
         ///     Initializes a new instance of the <see cref="TLRig" /> class.
         /// </summary>
-        /// <param name="isDurovMode">In Durov mode Bytes is an alias for String type hence both serializers have the same constructor numbers.</param>
+        /// <param name="isDurovMode">
+        ///     In Durov mode Bytes is an alias for String type hence both serializers have the same
+        ///     constructor numbers.
+        /// </param>
         public TLRig(bool isDurovMode)
         {
             _serializersBucket = new TLSerializersBucket(isDurovMode);
@@ -48,6 +57,10 @@ namespace SharpTL
         {
             _serializersBucket = serializersBucket;
         }
+
+        #endregion
+
+        #region Serializers
 
         /// <summary>
         ///     Get serializer.
@@ -80,16 +93,61 @@ namespace SharpTL
         }
 
         /// <summary>
+        ///     Prepare serializer for an object type.
+        /// </summary>
+        /// <typeparam name="T">Type of an object.</typeparam>
+        public void PrepareSerializer<T>()
+        {
+            _serializersBucket.PrepareSerializer<T>();
+        }
+
+        /// <summary>
+        ///     Prepare serializers for all TL objects in an assembly.
+        ///     For all objects with TLObject attribute should be prepared a serializer.
+        /// </summary>
+        /// <param name="assembly">Assembly with TL objects.</param>
+        public void PrepareSerializersForAllTLObjectsInAssembly(Assembly assembly)
+        {
+            IEnumerable<TypeInfo> typeInfos = from t in assembly.DefinedTypes
+                where t.GetCustomAttribute<TLObjectAttribute>() != null || t.GetCustomAttribute<TLObjectWithCustomSerializerAttribute>() != null
+                select t;
+
+            foreach (TypeInfo typeInfo in typeInfos)
+            {
+                _serializersBucket.PrepareSerializer(typeInfo.AsType());
+            }
+        }
+
+        #endregion
+
+        #region Serialization
+
+        /// <summary>
+        ///     Serializer an object.
+        /// </summary>
+        /// <param name="obj">The object to be serialized.</param>
+        /// <param name="streamer">TL streamer for writing.</param>
+        /// <param name="modeOverride">Serialization mode override.</param>
+        /// <returns>Bytes written to the stream.</returns>
+        public long Serialize(object obj, TLStreamer streamer, TLSerializationMode? modeOverride = null)
+        {
+            long initialPosition = streamer.Position;
+            Serialize(obj, new TLSerializationContext(this, streamer), modeOverride);
+            return streamer.Position - initialPosition;
+        }
+
+        /// <summary>
         ///     Serializer an object.
         /// </summary>
         /// <param name="obj">The object to be serialized.</param>
         /// <param name="stream">Stream for writing.</param>
         /// <param name="modeOverride">Serialization mode override.</param>
-        public void Serialize(object obj, Stream stream, TLSerializationMode? modeOverride = null)
+        /// <returns>Bytes written to the stream.</returns>
+        public long Serialize(object obj, Stream stream, TLSerializationMode? modeOverride = null)
         {
             using (var streamer = new TLStreamer(stream, true))
             {
-                Serialize(obj, new TLSerializationContext(this, streamer), modeOverride);
+                return Serialize(obj, streamer, modeOverride);
             }
         }
 
@@ -107,6 +165,30 @@ namespace SharpTL
                 return stream.ToArray();
             }
         }
+
+        /// <summary>
+        ///     Serialize an object.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <param name="context">TL serialization context.</param>
+        /// <param name="modeOverride">Serialization mode override.</param>
+        /// <exception cref="TLSerializerNotFoundException">When serializer not found.</exception>
+        public static void Serialize(object obj, TLSerializationContext context, TLSerializationMode? modeOverride = null)
+        {
+            Type objType = obj.GetType();
+
+            ITLSerializer serializer = context.Rig.GetSerializerByObjectType(objType);
+            if (serializer == null)
+            {
+                throw new TLSerializerNotFoundException(string.Format("There is no serializer for a type: '{0}'.", objType.FullName));
+            }
+
+            serializer.Write(obj, context, modeOverride);
+        }
+
+        #endregion
+
+        #region Deserialization
 
         /// <summary>
         ///     Deserialize an object.
@@ -144,7 +226,7 @@ namespace SharpTL
         /// <returns>Deserialized object.</returns>
         public T Deserialize<T>(TLStreamer streamer, TLSerializationMode? modeOverride = null)
         {
-            return (T)Deserialize(streamer, typeof(T), modeOverride);
+            return (T) Deserialize(streamer, typeof (T), modeOverride);
         }
 
         /// <summary>
@@ -226,52 +308,6 @@ namespace SharpTL
         }
 
         /// <summary>
-        ///     Prepare serializer for an object type.
-        /// </summary>
-        /// <typeparam name="T">Type of an object.</typeparam>
-        public void PrepareSerializer<T>()
-        {
-            _serializersBucket.PrepareSerializer<T>();
-        }
-
-        /// <summary>
-        ///     Prepare serializers for all TL objects in an assembly.
-        ///     For all objects with TLObject attribute should be prepared a serializer.
-        /// </summary>
-        /// <param name="assembly">Assembly with TL objects.</param>
-        public void PrepareSerializersForAllTLObjectsInAssembly(Assembly assembly)
-        {
-            IEnumerable<TypeInfo> typeInfos = from t in assembly.DefinedTypes
-                where t.GetCustomAttribute<TLObjectAttribute>() != null || t.GetCustomAttribute<TLObjectWithCustomSerializerAttribute>() != null
-                select t;
-
-            foreach (TypeInfo typeInfo in typeInfos)
-            {
-                _serializersBucket.PrepareSerializer(typeInfo.AsType());
-            }
-        }
-
-        /// <summary>
-        ///     Serialize an object.
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <param name="context">TL serialization context.</param>
-        /// <param name="modeOverride">Serialization mode override.</param>
-        /// <exception cref="TLSerializerNotFoundException">When serializer not found.</exception>
-        public static void Serialize(object obj, TLSerializationContext context, TLSerializationMode? modeOverride = null)
-        {
-            var objType = obj.GetType();
-
-            ITLSerializer serializer = context.Rig.GetSerializerByObjectType(objType);
-            if (serializer == null)
-            {
-                throw new TLSerializerNotFoundException(string.Format("There is no serializer for a type: '{0}'.", objType.FullName));
-            }
-
-            serializer.Write(obj, context, modeOverride);
-        }
-
-        /// <summary>
         ///     Deserialize an object from TL serialization context.
         /// </summary>
         /// <remarks>
@@ -294,7 +330,8 @@ namespace SharpTL
             ITLSerializer serializer = context.Rig.GetSerializerByConstructorNumber(constructorNumber);
             if (serializer == null)
             {
-                throw new TLSerializerNotFoundException(string.Format("Constructor number: 0x{0:X8} is not supported by any registered serializer.", constructorNumber));
+                throw new TLSerializerNotFoundException(
+                    string.Format("Constructor number: 0x{0:X8} is not supported by any registered serializer.", constructorNumber));
             }
 
             return serializer.Read(context, TLSerializationMode.Boxed);
@@ -334,5 +371,7 @@ namespace SharpTL
             }
             return serializer.Read(context, modeOverride);
         }
+
+        #endregion
     }
 }

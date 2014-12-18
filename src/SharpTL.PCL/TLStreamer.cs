@@ -55,6 +55,26 @@ namespace SharpTL
         /// <summary>
         ///     Initializes a new instance of the <see cref="TLStreamer" /> class.
         /// </summary>
+        /// <param name="bytes">Bytes.</param>
+        /// <param name="offset">Offset.</param>
+        /// <param name="count">Length from offset.</param>
+        public TLStreamer(byte[] bytes, int offset, int count)
+            : this(new MemoryStream(bytes, offset, count))
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TLStreamer" /> class.
+        /// </summary>
+        /// <param name="bytes">Bytes as array segment.</param>
+        public TLStreamer(ArraySegment<byte> bytes)
+            : this(new MemoryStream(bytes.Array, bytes.Offset, bytes.Count))
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TLStreamer" /> class.
+        /// </summary>
         /// <param name="stream">Stream.</param>
         /// <param name="leaveOpen">Leave underlying stream open.</param>
         public TLStreamer([NotNull] Stream stream, bool leaveOpen = false)
@@ -244,7 +264,8 @@ namespace SharpTL
         /// </summary>
         public override void WriteByte(byte value)
         {
-            _stream.WriteByte(value);
+            _buffer[0] = value;
+            Write(_buffer, 0, 1);
         }
 
         /// <summary>
@@ -262,7 +283,7 @@ namespace SharpTL
         public virtual void WriteInt32(int value)
         {
             value.ToBytes(_buffer, 0, _streamAsLittleEndianInternal);
-            _stream.Write(_buffer, 0, 4);
+            Write(_buffer, 0, 4);
         }
 
         /// <summary>
@@ -296,7 +317,7 @@ namespace SharpTL
         public virtual void WriteInt64(long value)
         {
             value.ToBytes(_buffer, 0, _streamAsLittleEndianInternal);
-            _stream.Write(_buffer, 0, 8);
+            Write(_buffer, 0, 8);
         }
 
         /// <summary>
@@ -467,17 +488,23 @@ namespace SharpTL
         /// <summary>
         ///     Push current position to a stack.
         /// </summary>
-        public void PushPosition()
+        /// <returns>Current position.</returns>
+        public long PushPosition()
         {
-            _positionStack.Push(Position);
+            var position = Position;
+            _positionStack.Push(position);
+            return position;
         }
 
         /// <summary>
         ///     Pop current position from a stack.
         /// </summary>
-        public void PopPosition()
+        /// <returns>Current position.</returns>
+        public long PopPosition()
         {
-            Position = _positionStack.Pop();
+            var position = _positionStack.Pop();
+            Position = position;
+            return position;
         }
 
         /// <summary>

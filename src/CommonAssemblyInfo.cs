@@ -9,8 +9,7 @@ using System.Resources;
 
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SharpTL")]
-[assembly: AssemblyCopyright("Copyright © 2013-2014 Alexander Logger.")]
+[assembly: AssemblyCopyright("Copyright © Alexander Logger.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
-[assembly: AssemblyVersion("0.8.0")]
