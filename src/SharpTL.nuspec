@@ -27,7 +27,7 @@
     <licenseUrl>https://github.com/Taggersoft/SharpTL/blob/master/LICENSE.md</licenseUrl>
     <references></references>
     <dependencies>
-      <dependency id="BigMath" version="0.4.3" />
+      <dependency id="BigMath" version="0.5.0" />
       <dependency id="Dynamitey" version="1.0.2" />
     </dependencies>
     <tags>TypeLanguage TL Serialization MTProto Telegram</tags>
